@@ -1,0 +1,16 @@
+{
+    "extends": [
+      "airbnb",
+      "airbnb/hooks",
+      "plugin:@typescript-eslint/recommended", 
+      "plugin:prettier/recommended"
+    ],
+    "parser": "@typescript-eslint/parser",
+    "plugins": ["@typescript-eslint"],
+    "ignorePatterns": ["node_modules/","__tests__/"],
+    "rules":  {
+        "react/jsx-filename-extension": [2, { "extensions": [".js", ".jsx", ".ts", ".tsx"] }],
+        "no-use-before-define": "off",
+        "@typescript-eslint/no-use-before-define": ["error"]
+      }
+}
