@@ -10,12 +10,12 @@ const styles = StyleSheet.create({
 	},
 });
 
-function App(): ReactElement {
+function Web(): ReactElement {
 	return (
 		<View style={styles.container}>
-			<TextItem text="Hello world from React Naitve Web" />
+			<TextItem text="Hello world from React Web" />
 		</View>
 	);
 }
 
-export default App;
+export default Web;
