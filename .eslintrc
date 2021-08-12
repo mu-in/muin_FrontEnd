@@ -15,9 +15,5 @@
         "import/no-unresolved": "off",
         "import/extensions": "off",
         "@typescript-eslint/no-var-requires": 0
-    },
-    "env": {
-      "browser": true,
-      "node": true
     }
 }

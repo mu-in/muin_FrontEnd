@@ -1,6 +1,6 @@
 import React, { ReactElement } from 'react';
 import { View, StyleSheet } from 'react-native';
-import TextItem from './components/Test';
+import TextItem from '../../components/Test';
 
 const styles = StyleSheet.create({
 	container: {
