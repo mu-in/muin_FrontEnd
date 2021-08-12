@@ -11,6 +11,13 @@
     "rules":  {
         "react/jsx-filename-extension": [2, { "extensions": [".js", ".jsx", ".ts", ".tsx"] }],
         "no-use-before-define": "off",
-        "@typescript-eslint/no-use-before-define": ["error"]
+        "@typescript-eslint/no-use-before-define": ["error"],
+        "import/no-unresolved": "off",
+        "import/extensions": "off",
+        "@typescript-eslint/no-var-requires": 0
+    },
+    "env": {
+      "browser": true,
+      "node": true
     }
 }
