@@ -14,6 +14,7 @@
     "lint:fix": "eslint --fix './**/*.{ts,tsx}'"
   },
   "dependencies": {
+    "@react-navigation/bottom-tabs": "^6.0.5",
     "@react-navigation/native": "^6.0.2",
     "@react-navigation/native-stack": "^6.1.0",
     "eslint-config-airbnb": "^18.2.1",

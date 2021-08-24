@@ -1,7 +1,5 @@
 import React, { ReactElement } from 'react';
-import { SafeAreaView, View, StyleSheet } from 'react-native';
-
-import QR from '../../../components/QR';
+import { SafeAreaView, View, Text, StyleSheet } from 'react-native';
 
 const styles = StyleSheet.create({
 	container: {
@@ -11,14 +9,14 @@ const styles = StyleSheet.create({
 	},
 });
 
-function Home(): ReactElement {
+function Manage(): ReactElement {
 	return (
 		<SafeAreaView style={styles.container}>
 			<View>
-				<QR />
+				<Text>Manage</Text>
 			</View>
 		</SafeAreaView>
 	);
 }
 
-export default Home;
+export default Manage;

@@ -1,10 +1,10 @@
 import { ParamListBase } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import React, { ReactElement } from 'react';
-import { SafeAreaView, View, Text, StyleSheet } from 'react-native';
+import { SafeAreaView, View, Text, StyleSheet, Button } from 'react-native';
 
 interface Props {
-	navigation: NativeStackNavigationProp<ParamListBase, 'Test'>;
+	navigation: NativeStackNavigationProp<ParamListBase, 'StoreInfo'>;
 }
 
 const styles = StyleSheet.create({
@@ -15,14 +15,15 @@ const styles = StyleSheet.create({
 	},
 });
 
-function Test({ navigation }: Props): ReactElement {
+function StoreInfo({ navigation }: Props): ReactElement {
 	return (
 		<SafeAreaView style={styles.container}>
 			<View>
-				<Text>Test</Text>
+				<Text>Store</Text>
+				<Button title="Go to Store List" onPress={() => navigation.navigate('StoreList')} />
 			</View>
 		</SafeAreaView>
 	);
 }
 
-export default Test;
+export default StoreInfo;
