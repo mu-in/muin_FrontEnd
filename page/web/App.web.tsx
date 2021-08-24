@@ -1,6 +1,5 @@
 import React, { ReactElement } from 'react';
-import { View, StyleSheet } from 'react-native';
-import TextItem from '../../components/Test';
+import { View, StyleSheet, Text } from 'react-native';
 
 const styles = StyleSheet.create({
 	container: {
@@ -13,7 +12,7 @@ const styles = StyleSheet.create({
 function Web(): ReactElement {
 	return (
 		<View style={styles.container}>
-			<TextItem text="Hello world from React Web" />
+			<Text>Hello world from React Web</Text>
 		</View>
 	);
 }
