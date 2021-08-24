@@ -1,8 +1,7 @@
 import { ParamListBase } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import React, { ReactElement } from 'react';
-import { View, StyleSheet } from 'react-native';
-import TextItem from '../../../components/Test';
+import { View, Text, StyleSheet } from 'react-native';
 
 interface Props {
 	navigation: NativeStackNavigationProp<ParamListBase, 'Test'>;
@@ -19,7 +18,7 @@ const styles = StyleSheet.create({
 function Test({ navigation }: Props): ReactElement {
 	return (
 		<View style={styles.container}>
-			<TextItem text="Test" />
+			<Text>Test</Text>
 		</View>
 	);
 }
