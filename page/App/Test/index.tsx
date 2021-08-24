@@ -1,7 +1,7 @@
 import { ParamListBase } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import React, { ReactElement } from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { SafeAreaView, View, Text, StyleSheet } from 'react-native';
 
 interface Props {
 	navigation: NativeStackNavigationProp<ParamListBase, 'Test'>;
@@ -17,9 +17,11 @@ const styles = StyleSheet.create({
 
 function Test({ navigation }: Props): ReactElement {
 	return (
-		<View style={styles.container}>
-			<Text>Test</Text>
-		</View>
+		<SafeAreaView style={styles.container}>
+			<View>
+				<Text>Test</Text>
+			</View>
+		</SafeAreaView>
 	);
 }
 
