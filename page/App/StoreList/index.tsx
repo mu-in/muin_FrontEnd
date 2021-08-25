@@ -3,6 +3,8 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import React, { ReactElement } from 'react';
 import { SafeAreaView, View, Text, StyleSheet, Button } from 'react-native';
 
+import GeoLocation from '../../../components/GeoLocation';
+
 interface Props {
 	navigation: NativeStackNavigationProp<ParamListBase, 'StoreList'>;
 }
@@ -19,6 +21,7 @@ function StoreList({ navigation }: Props): ReactElement {
 	return (
 		<SafeAreaView style={styles.container}>
 			<View>
+				<GeoLocation />
 				<Text>Store List</Text>
 				<Button title="Go to Store List" onPress={() => navigation.navigate('StoreInfo')} />
 			</View>
