@@ -1,10 +1,10 @@
 import React, { ReactElement } from 'react';
-import { SafeAreaView, View, Text, StyleSheet, Button } from 'react-native';
+import { SafeAreaView, View, StyleSheet, Text, Button } from 'react-native';
 import { ParamListBase } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
 interface Props {
-	navigation: NativeStackNavigationProp<ParamListBase, '관리 매장'>;
+	navigation: NativeStackNavigationProp<ParamListBase, '매니저 인증'>;
 }
 
 const styles = StyleSheet.create({
@@ -15,15 +15,14 @@ const styles = StyleSheet.create({
 	},
 });
 
-function Manage({ navigation }: Props): ReactElement {
+function AuthManager({ navigation }: Props): ReactElement {
 	return (
 		<SafeAreaView style={styles.container}>
 			<View>
-				<Text>Manage</Text>
-				<Button title="세종마트" onPress={() => navigation.navigate('세종마트')} />
+				<Text>auth</Text>
 			</View>
 		</SafeAreaView>
 	);
 }
 
-export default Manage;
+export default AuthManager;

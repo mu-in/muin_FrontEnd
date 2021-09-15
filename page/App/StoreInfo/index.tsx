@@ -1,7 +1,7 @@
-import { ParamListBase } from '@react-navigation/native';
-import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import React, { ReactElement } from 'react';
 import { SafeAreaView, View, Text, StyleSheet, Button } from 'react-native';
+import { ParamListBase } from '@react-navigation/native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
 interface Props {
 	navigation: NativeStackNavigationProp<ParamListBase, 'StoreInfo'>;
