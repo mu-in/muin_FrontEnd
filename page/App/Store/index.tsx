@@ -17,16 +17,16 @@ const styles = StyleSheet.create({
 	},
 });
 
-function StoreList({ navigation }: Props): ReactElement {
+function Store({ navigation }: Props): ReactElement {
 	return (
 		<SafeAreaView style={styles.container}>
 			<View>
 				<GeoLocation />
 				<Text>Store List</Text>
-				<Button title="Go to Store List" onPress={() => navigation.navigate('StoreInfo')} />
+				<Button title="Go to Store info" onPress={() => navigation.navigate('StoreInfo')} />
 			</View>
 		</SafeAreaView>
 	);
 }
 
-export default StoreList;
+export default Store;

@@ -7,13 +7,13 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import Home from './Home';
 import AuthManager from './AuthManager';
 
-import StoreList from './StoreList';
-import StoreInfo from './StoreInfo';
+import StoreList from './Store';
+import StoreInfo from './Store/StoreInfo';
 
 import Manage from './Manage';
-import ManageHome from './ManageHome';
-import ManageStock from './ManageStock';
-import TransactionHistory from './TransactionHistory';
+import ManageHome from './Manage/ManageHome';
+import ManageStock from './Manage/ManageStock';
+import TransactionHistory from './Manage/TransactionHistory';
 
 Ionicons.loadFont().then();
 
@@ -23,7 +23,7 @@ const HomeStack = createNativeStackNavigator();
 function HomeStackScreen(): ReactElement {
 	return (
 		<HomeStack.Navigator>
-			<HomeStack.Screen name="QR" component={Home} />
+			<HomeStack.Screen name="QR" component={Home} initialParams={{ manager: false }} />
 			<HomeStack.Screen name="매니저 인증" component={AuthManager} />
 		</HomeStack.Navigator>
 	);
