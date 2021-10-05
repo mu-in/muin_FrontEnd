@@ -140,7 +140,7 @@ function AuthManager({ navigation }: Props): ReactElement {
 	};
 
 	useEffect(() => {
-		console.log(page);
+		// console.log(page);
 	}, [page]);
 
 	return (

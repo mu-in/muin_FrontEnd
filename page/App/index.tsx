@@ -17,13 +17,13 @@ import TransactionHistory from './Manage/TransactionHistory';
 
 Ionicons.loadFont().then();
 
-const manager = true; // manager에만 manage tab 생성
+const manager = false; // manager에만 manage tab 생성
 
 const HomeStack = createNativeStackNavigator();
 function HomeStackScreen(): ReactElement {
 	return (
 		<HomeStack.Navigator>
-			<HomeStack.Screen name="QR" component={Home} initialParams={{ manager: false }} />
+			<HomeStack.Screen name="QR" component={Home} />
 			<HomeStack.Screen name="매니저 인증" component={AuthManager} />
 		</HomeStack.Navigator>
 	);
