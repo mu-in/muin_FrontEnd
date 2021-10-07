@@ -2,13 +2,15 @@
 /* eslint-disable consistent-return */
 /* eslint-disable func-names */
 
-import React, { ReactElement, useEffect, useState } from 'react';
+import React, { ReactElement, useContext, useEffect, useState } from 'react';
 import { SafeAreaView, View, StyleSheet, Text, Button, TextInput, Alert } from 'react-native';
 import { ParamListBase } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
 import Title from '../../../components/Title';
 import TagBtn from '../../../components/TagBtn';
+
+import { UserContext } from '../Context';
 
 interface Props {
 	navigation: NativeStackNavigationProp<ParamListBase, '매니저 인증'>;
@@ -84,8 +86,8 @@ const answers = {
 	keyword: '',
 };
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 function AuthManager({ navigation }: Props): ReactElement {
+	const { manager, setManager } = useContext(UserContext);
 	const [answer, setAnswer] = useState('');
 	const [page, setPage] = useState(0);
 
@@ -136,6 +138,7 @@ function AuthManager({ navigation }: Props): ReactElement {
 	};
 
 	const finish = () => {
+		setManager(true);
 		Alert.alert('완료', '매니저 인증이 완료되었습니다.', [{ text: '확인', onPress: () => navigation.navigate('QR') }]);
 	};
 

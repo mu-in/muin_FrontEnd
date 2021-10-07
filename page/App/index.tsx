@@ -1,4 +1,4 @@
-import React, { ReactElement } from 'react';
+import React, { ReactElement, useContext } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
@@ -15,9 +15,9 @@ import ManageHome from './Manage/ManageHome';
 import ManageStock from './Manage/ManageStock';
 import TransactionHistory from './Manage/TransactionHistory';
 
-Ionicons.loadFont().then();
+import Context, { UserContext } from './Context';
 
-const manager = false; // manager에만 manage tab 생성
+Ionicons.loadFont().then();
 
 const HomeStack = createNativeStackNavigator();
 function HomeStackScreen(): ReactElement {
@@ -33,7 +33,7 @@ const StoreStack = createNativeStackNavigator();
 function StoreStackScreen(): ReactElement {
 	return (
 		<StoreStack.Navigator>
-			<StoreStack.Screen name="StoreList" component={StoreList} />
+			<StoreStack.Screen name="STORE" component={StoreList} />
 			<StoreStack.Screen name="StoreInfo" component={StoreInfo} />
 		</StoreStack.Navigator>
 	);
@@ -52,7 +52,9 @@ function ManageStackScreen(): ReactElement {
 }
 
 const Tab = createBottomTabNavigator();
-function App(): ReactElement {
+function TabScreen(): ReactElement {
+	const { manager, setManager } = useContext(UserContext);
+
 	return (
 		<NavigationContainer>
 			<Tab.Navigator
@@ -77,6 +79,14 @@ function App(): ReactElement {
 				{manager === true ? <Tab.Screen name="MANAGE" component={ManageStackScreen} /> : null}
 			</Tab.Navigator>
 		</NavigationContainer>
+	);
+}
+
+function App(): ReactElement {
+	return (
+		<Context>
+			<TabScreen />
+		</Context>
 	);
 }
 

@@ -1,4 +1,4 @@
-import React, { ReactElement, useEffect, useState } from 'react';
+import React, { ReactElement, useEffect, useState, useContext } from 'react';
 import { SafeAreaView, View, StyleSheet, Text, Alert, TouchableOpacity } from 'react-native';
 import { ParamListBase } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
@@ -6,6 +6,8 @@ import QRCode from 'react-native-qrcode-svg';
 import RNTotp from 'react-native-totp';
 
 import TagBtn from '../../../components/TagBtn';
+
+import { UserContext } from '../Context';
 
 interface Props {
 	navigation: NativeStackNavigationProp<ParamListBase, 'QR'>;
@@ -65,7 +67,7 @@ const styles = StyleSheet.create({
 const logo = require('../../../img/logo.png');
 
 function Home({ navigation }: Props): ReactElement {
-	const manager = false;
+	const { manager, setManager } = useContext(UserContext);
 	const userName = '김세종';
 	const [sec, setSec] = useState(0);
 	const [token, setToken] = useState('-');
