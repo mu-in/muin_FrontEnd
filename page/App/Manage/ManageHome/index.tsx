@@ -4,7 +4,7 @@ import { ParamListBase } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
 interface Props {
-	navigation: NativeStackNavigationProp<ParamListBase, '관리 매장'>;
+	navigation: NativeStackNavigationProp<ParamListBase, '세종마트'>;
 }
 
 const styles = StyleSheet.create({
@@ -15,15 +15,16 @@ const styles = StyleSheet.create({
 	},
 });
 
-function Manage({ navigation }: Props): ReactElement {
+function ManageHome({ navigation }: Props): ReactElement {
 	return (
 		<SafeAreaView style={styles.container}>
 			<View>
-				<Text>Manage</Text>
-				<Button title="세종마트" onPress={() => navigation.navigate('세종마트')} />
+				<Text>ManageHome</Text>
+				<Button title="최근거래" onPress={() => navigation.navigate('최근거래')} />
+				<Button title="재고관리" onPress={() => navigation.navigate('재고관리')} />
 			</View>
 		</SafeAreaView>
 	);
 }
 
-export default Manage;
+export default ManageHome;
