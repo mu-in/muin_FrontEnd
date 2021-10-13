@@ -5,23 +5,27 @@ interface Props {
 	children: JSX.Element;
 }
 const defaultValue = {
+	name: '-',
 	manager: false,
+	setName: (name: string) => {},
 	setManager: (manager: boolean) => {},
 };
 
 export const UserContext = createContext(defaultValue);
 
-const Context = (props: Props): ReactElement => {
+export const UserContextProvider = (props: Props): ReactElement => {
 	const { children } = props;
 	const [initManager, setInitManager] = useState(false);
+	const [initName, setInitName] = useState('-');
 
-	const setInitUserHandler = (manager: boolean) => setInitManager(manager);
+	const setManagerHandler = (manager: boolean) => setInitManager(manager);
+	const setNameHandler = (name: string) => setInitName(name);
 
 	return (
-		<UserContext.Provider value={{ manager: initManager, setManager: setInitUserHandler }}>
+		<UserContext.Provider
+			value={{ name: initName, manager: initManager, setName: setNameHandler, setManager: setManagerHandler }}
+		>
 			{children}
 		</UserContext.Provider>
 	);
 };
-
-export default Context;
