@@ -12,6 +12,7 @@ target 'muin_FrontEnd' do
     :hermes_enabled => false
   )
 
+  pod 'GoogleSignIn', '~> 6.0.2' # // RNGoogleSignin requires GoogleSignIn >= 5.0.0
 
   target 'muin_FrontEndTests' do
     inherit! :complete
