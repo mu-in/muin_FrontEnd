@@ -62,11 +62,11 @@ function TabScreen(): ReactElement {
 					tabBarIcon: ({ size, color }: { size: number; color: string }) => {
 						let icon = 'ios-information-circle';
 
-						if (route.name === 'HOME') {
+						if (route.name === '홈') {
 							icon = 'ios-scan-sharp';
-						} else if (route.name === 'STORE') {
+						} else if (route.name === '매장') {
 							icon = 'basket-outline';
-						} else if (route.name === 'MANAGE') {
+						} else if (route.name === '관리') {
 							icon = 'md-cog';
 						}
 						return <Ionicons name={icon} size={size} color={color} />;
@@ -74,9 +74,9 @@ function TabScreen(): ReactElement {
 					headerShown: false,
 				})}
 			>
-				<Tab.Screen name="HOME" component={HomeStackScreen} />
-				<Tab.Screen name="STORE" component={StoreStackScreen} />
-				{manager === true ? <Tab.Screen name="MANAGE" component={ManageStackScreen} /> : null}
+				<Tab.Screen name="홈" component={HomeStackScreen} />
+				<Tab.Screen name="매장" component={StoreStackScreen} />
+				{manager === true ? <Tab.Screen name="관리" component={ManageStackScreen} /> : null}
 			</Tab.Navigator>
 		</NavigationContainer>
 	);
