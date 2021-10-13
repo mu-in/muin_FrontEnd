@@ -1,5 +1,5 @@
 import React, { ReactElement, useContext, useState } from 'react';
-import { SafeAreaView, View, Text, StyleSheet, Button } from 'react-native';
+import { SafeAreaView, View, Text, StyleSheet, Button, Alert } from 'react-native';
 import { ParamListBase } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { GoogleSignin, GoogleSigninButton } from '@react-native-google-signin/google-signin';
@@ -19,8 +19,7 @@ const styles = StyleSheet.create({
 });
 
 function Login({ navigation }: Props): ReactElement {
-	const { name, setName } = useContext(UserContext);
-	const [userInfo, setUserInfo] = useState({});
+	const { setName, setToken } = useContext(UserContext);
 
 	const signIn = async () => {
 		GoogleSignin.configure({
@@ -29,23 +28,20 @@ function Login({ navigation }: Props): ReactElement {
 		try {
 			await GoogleSignin.hasPlayServices();
 			const info = await GoogleSignin.signIn();
-			setUserInfo(info);
-			console.log(userInfo);
+
+			if (info.user.name != null) setName(info.user.name);
+			if (info.idToken != null) setToken(info.idToken);
+
 			navigation.navigate('QR');
 		} catch (error) {
-			//
+			console.log(error);
 		}
 	};
 
-	const login = () => {
-		setName('무야호!');
-		navigation.navigate('QR');
-	};
 	return (
 		<SafeAreaView style={styles.container}>
 			<View>
 				<Text>login</Text>
-				<Button onPress={login} title="login" />
 				<Button onPress={signIn} title="google" />
 			</View>
 		</SafeAreaView>
