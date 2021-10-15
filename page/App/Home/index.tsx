@@ -67,8 +67,7 @@ const styles = StyleSheet.create({
 const logo = require('../../../img/logo.png');
 
 function Home({ navigation }: Props): ReactElement {
-	const { manager, setManager } = useContext(UserContext);
-	const userName = '김세종';
+	const { name, manager } = useContext(UserContext);
 	const [sec, setSec] = useState(0);
 	const [token, setToken] = useState('-');
 
@@ -98,33 +97,43 @@ function Home({ navigation }: Props): ReactElement {
 		<SafeAreaView style={styles.container}>
 			<Text style={styles.text}>{'이용하려는 무인매장에\nQR코드로 체크인하세요.'}</Text>
 			<View style={styles.box}>
-				<Text style={styles.box_tr}>{userName}님</Text>
-				<View style={styles.box_tl}>
-					{manager ? (
-						<TagBtn
-							title="매니저"
-							checked
-							onPress={() => Alert.alert('매니저 인증 완료', '매니저 인증이 완료된 사용자입니다.', [{ text: '확인' }])}
-						/>
-					) : (
-						<TagBtn title="고객" onPress={() => navigation.navigate('매니저 인증')} />
-					)}
-				</View>
-				<Text style={styles.box_b}>🕒 {sec} 초</Text>
-				<View style={styles.qr}>
-					{sec === 0 ? (
-						<View>
-							<TouchableOpacity onPress={qrcode}>
-								<Text style={styles.qr_btn}>입장 QR 생성</Text>
-							</TouchableOpacity>
+				{name !== '-' ? (
+					<>
+						<Text style={styles.box_tr}>{name}님</Text>
+						<View style={styles.box_tl}>
+							{manager ? (
+								<TagBtn
+									title="매니저"
+									checked
+									onPress={() =>
+										Alert.alert('매니저 인증 완료', '매니저 인증이 완료된 사용자입니다.', [{ text: '확인' }])
+									}
+								/>
+							) : (
+								<TagBtn title="고객" onPress={() => navigation.navigate('매니저 인증')} />
+							)}
 						</View>
-					) : (
-						<View>
-							<QRCode value={token} logo={logo} logoSize={50} size={200} />
-							<Text>{token}</Text>
+						<Text style={styles.box_b}>🕒 {sec} 초</Text>
+						<View style={styles.qr}>
+							{sec === 0 ? (
+								<View>
+									<TouchableOpacity onPress={qrcode}>
+										<Text style={styles.qr_btn}>입장 QR 생성</Text>
+									</TouchableOpacity>
+								</View>
+							) : (
+								<View>
+									<QRCode value={token} logo={logo} logoSize={50} size={200} />
+									<Text>{token}</Text>
+								</View>
+							)}
 						</View>
-					)}
-				</View>
+					</>
+				) : (
+					<TouchableOpacity onPress={() => navigation.navigate('Login')}>
+						<Text style={styles.qr_btn}>로그인 후 이용가능</Text>
+					</TouchableOpacity>
+				)}
 			</View>
 		</SafeAreaView>
 	);

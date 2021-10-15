@@ -106,6 +106,13 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		7451A415BCF74B75A3D73A44 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Resources;
+			sourceTree = "<group>";
+		};
 		832341AE1AAA6A7D00B99B32 /* Libraries */ = {
 			isa = PBXGroup;
 			children = (
@@ -146,17 +153,8 @@
 				B84AEAACE7988101DAE111B9 /* Pods-muin_FrontEnd-muin_FrontEndTests.debug.xcconfig */,
 				98255D947A73F18C75FF4CA5 /* Pods-muin_FrontEnd-muin_FrontEndTests.release.xcconfig */,
 			);
-			name = Pods;
 			path = Pods;
 			sourceTree = "<group>";
-		};
-		7451A415BCF74B75A3D73A44 /* Resources */ = {
-			isa = "PBXGroup";
-			children = (
-			);
-			name = Resources;
-			sourceTree = "<group>";
-			path = "";
 		};
 /* End PBXGroup section */
 
@@ -458,6 +456,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = J33CAFS894;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = muin_FrontEnd/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -484,6 +483,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = J33CAFS894;
 				INFOPLIST_FILE = muin_FrontEnd/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",

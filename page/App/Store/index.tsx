@@ -1,9 +1,10 @@
-import React, { ReactElement, useState } from 'react';
+import React, { ReactElement, useContext, useState } from 'react';
 import { SafeAreaView, View, Text, StyleSheet, Button, TouchableOpacity } from 'react-native';
 import { ParamListBase } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
 import GeoLocation from '../../../components/GeoLocation';
+import { UserContext } from '../Context';
 
 interface Props {
 	navigation: NativeStackNavigationProp<ParamListBase, 'STORE'>;
@@ -59,6 +60,7 @@ const styles = StyleSheet.create({
 });
 
 function Store({ navigation }: Props): ReactElement {
+	const { name } = useContext(UserContext);
 	const [meter, setMeter] = useState('500 m');
 
 	const onPress = () => {
@@ -71,7 +73,7 @@ function Store({ navigation }: Props): ReactElement {
 		<SafeAreaView style={styles.container}>
 			<View style={styles.top}>
 				<View style={styles.top_l}>
-					<Text style={styles.bold_black}>김세종님</Text>
+					<Text style={styles.bold_black}>{name}님</Text>
 					<Text>근처 무인매장</Text>
 				</View>
 				<View style={styles.top_r}>

@@ -5,6 +5,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
 import Home from './Home';
+import Login from './Login';
 import AuthManager from './AuthManager';
 
 import StoreList from './Store';
@@ -15,7 +16,7 @@ import ManageHome from './Manage/ManageHome';
 import ManageStock from './Manage/ManageStock';
 import TransactionHistory from './Manage/TransactionHistory';
 
-import Context, { UserContext } from './Context';
+import { UserContextProvider, UserContext } from './Context';
 
 Ionicons.loadFont().then();
 
@@ -24,6 +25,7 @@ function HomeStackScreen(): ReactElement {
 	return (
 		<HomeStack.Navigator>
 			<HomeStack.Screen name="QR" component={Home} />
+			<HomeStack.Screen name="Login" component={Login} />
 			<HomeStack.Screen name="매니저 인증" component={AuthManager} />
 		</HomeStack.Navigator>
 	);
@@ -53,7 +55,7 @@ function ManageStackScreen(): ReactElement {
 
 const Tab = createBottomTabNavigator();
 function TabScreen(): ReactElement {
-	const { manager, setManager } = useContext(UserContext);
+	const { name, manager } = useContext(UserContext);
 
 	return (
 		<NavigationContainer>
@@ -75,7 +77,7 @@ function TabScreen(): ReactElement {
 				})}
 			>
 				<Tab.Screen name="홈" component={HomeStackScreen} />
-				<Tab.Screen name="매장" component={StoreStackScreen} />
+				{name !== '-' ? <Tab.Screen name="매장" component={StoreStackScreen} /> : null}
 				{manager === true ? <Tab.Screen name="관리" component={ManageStackScreen} /> : null}
 			</Tab.Navigator>
 		</NavigationContainer>
@@ -84,9 +86,9 @@ function TabScreen(): ReactElement {
 
 function App(): ReactElement {
 	return (
-		<Context>
+		<UserContextProvider>
 			<TabScreen />
-		</Context>
+		</UserContextProvider>
 	);
 }
 
