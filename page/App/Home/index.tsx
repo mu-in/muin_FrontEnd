@@ -2,9 +2,9 @@ import React, { ReactElement, useEffect, useState, useContext } from 'react';
 import { SafeAreaView, View, StyleSheet, Text, Alert, TouchableOpacity } from 'react-native';
 import { ParamListBase } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import QRCode from 'react-native-qrcode-svg';
-import RNTotp from 'react-native-totp';
 
+import QRCode from 'react-native-qrcode-svg';
+import TOTP from 'totp-generator';
 import TagBtn from '../../../components/TagBtn';
 
 import { UserContext } from '../Context';
@@ -67,22 +67,36 @@ const styles = StyleSheet.create({
 const logo = require('../../../img/logo.png');
 
 function Home({ navigation }: Props): ReactElement {
-	const { name, manager } = useContext(UserContext);
+	const { name, manager, uuid } = useContext(UserContext);
 	const [sec, setSec] = useState(0);
-	const [token, setToken] = useState('-');
+	const [totp, setTotp] = useState(
+		TOTP(uuid, {
+			digits: 8,
+			algorithm: 'SHA-512',
+			period: 15,
+		})
+	);
 
 	const qrcode = () => {
 		setSec(15);
-		RNTotp.generateOTP(
-			{
-				base32String: '123',
+		setTotp(
+			TOTP(uuid, {
 				digits: 8,
+				algorithm: 'SHA-512',
 				period: 15,
-			},
-			(code) => {
-				setToken(code);
-			}
+			})
 		);
+
+		// RNTotp.generateOTP(
+		//	{
+		//		base32String: '123',
+		//		digits: 8,
+		//		period: 15,
+		//	},
+		//	(code) => {
+		//		setTotp(code);
+		//	}
+		// );
 	};
 
 	useEffect(() => {
@@ -123,8 +137,8 @@ function Home({ navigation }: Props): ReactElement {
 								</View>
 							) : (
 								<View>
-									<QRCode value={token} logo={logo} logoSize={50} size={200} />
-									<Text>{token}</Text>
+									<QRCode value={totp.toString()} logo={logo} logoSize={50} size={200} />
+									<Text>{totp}</Text>
 								</View>
 							)}
 						</View>

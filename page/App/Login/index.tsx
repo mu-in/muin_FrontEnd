@@ -1,5 +1,5 @@
-import React, { ReactElement, useContext, useState } from 'react';
-import { SafeAreaView, View, Text, StyleSheet, Button, Alert } from 'react-native';
+import React, { ReactElement, useContext } from 'react';
+import { SafeAreaView, View, Text, StyleSheet, Button, Alert, Image } from 'react-native';
 import { ParamListBase } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { GoogleSignin, GoogleSigninButton } from '@react-native-google-signin/google-signin';
@@ -15,11 +15,12 @@ const styles = StyleSheet.create({
 		flex: 1,
 		justifyContent: 'center',
 		alignItems: 'center',
+		backgroundColor: '#ffffff',
 	},
 });
 
 function Login({ navigation }: Props): ReactElement {
-	const { setName, setToken } = useContext(UserContext);
+	const { setName, setGoogle } = useContext(UserContext);
 
 	const signIn = async () => {
 		GoogleSignin.configure({
@@ -30,7 +31,7 @@ function Login({ navigation }: Props): ReactElement {
 			const info = await GoogleSignin.signIn();
 
 			if (info.user.name != null) setName(info.user.name);
-			if (info.idToken != null) setToken(info.idToken);
+			if (info.idToken != null) setGoogle(info.idToken);
 
 			navigation.navigate('QR');
 		} catch (error) {
