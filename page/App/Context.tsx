@@ -6,10 +6,14 @@ interface Props {
 }
 const defaultValue = {
 	name: '-',
-	token: '-',
+	uuid: '-',
+	jwt: '-',
+	google: '-',
 	manager: false,
 	setName: (name: string) => {},
-	setToken: (token: string) => {},
+	setUuid: (uuid: string) => {},
+	setJwt: (jwt: string) => {},
+	setGoogle: (token: string) => {},
 	setManager: (manager: boolean) => {},
 };
 
@@ -18,21 +22,29 @@ export const UserContext = createContext(defaultValue);
 export const UserContextProvider = (props: Props): ReactElement => {
 	const { children } = props;
 	const [initName, setInitName] = useState('-');
-	const [initToken, setInitToken] = useState('-');
+	const [initUuid, setInitUuid] = useState('A');
+	const [initJwt, setInitJwt] = useState('-');
+	const [initGoogle, setInitGoogle] = useState('-');
 	const [initManager, setInitManager] = useState(false);
 
 	const setNameHandler = (name: string) => setInitName(name);
-	const setTokenHandler = (token: string) => setInitToken(token);
+	const setUuidHandler = (uuid: string) => setInitUuid(uuid);
+	const setJwtHandler = (jwt: string) => setInitJwt(jwt);
+	const setGoogleHandler = (google: string) => setInitGoogle(google);
 	const setManagerHandler = (manager: boolean) => setInitManager(manager);
 
 	return (
 		<UserContext.Provider
 			value={{
 				name: initName,
-				token: initToken,
+				uuid: initUuid,
+				jwt: initJwt,
+				google: initGoogle,
 				manager: initManager,
 				setName: setNameHandler,
-				setToken: setTokenHandler,
+				setUuid: setUuidHandler,
+				setJwt: setJwtHandler,
+				setGoogle: setGoogleHandler,
 				setManager: setManagerHandler,
 			}}
 		>
