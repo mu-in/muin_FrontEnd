@@ -1,10 +1,10 @@
-import React, { ReactElement, useContext, useState } from 'react';
-import { SafeAreaView, View, Text, StyleSheet, TouchableOpacity, Alert, Image } from 'react-native';
+import React, { ReactElement, useContext } from 'react';
+import { SafeAreaView, View, StyleSheet, Alert, Image } from 'react-native';
 import { ParamListBase } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { GoogleSignin, GoogleSigninButton } from '@react-native-google-signin/google-signin';
 
-import { UserContext } from '../Context';
+import { UserContext, ServerContext } from '../Context';
 
 interface Props {
 	navigation: NativeStackNavigationProp<ParamListBase, 'Login'>;
@@ -49,8 +49,25 @@ const styles = StyleSheet.create({
 const logo = require('../../../img/logo.png');
 
 function Login({ navigation }: Props): ReactElement {
-	const { name, setName, setGoogle } = useContext(UserContext);
-	const [login, setLogin] = useState(false);
+	const { setName, setEmail, setGoogle, setJwt, setUuid } = useContext(UserContext);
+	const { url } = useContext(ServerContext);
+
+	const postServer = async ({ name, email, id }: { name: string | null; email: string; id: string | null }) => {
+		console.log(JSON.stringify({ name, email, id_token: id }));
+		const res = await fetch(`${url}/user/login`, {
+			method: 'POST',
+			headers: { 'Content-Type': 'application/json' },
+			body: JSON.stringify({ name, email, id_token: id }),
+		});
+
+		const data = await res.json();
+		console.log(data);
+
+		setUuid(data.uuid);
+		setJwt(data.jwt);
+
+		navigation.navigate('QR');
+	};
 
 	const signIn = async () => {
 		GoogleSignin.configure({
@@ -62,36 +79,25 @@ function Login({ navigation }: Props): ReactElement {
 
 			if (info.user.name != null) setName(info.user.name);
 			if (info.idToken != null) setGoogle(info.idToken);
+			if (info.user.email != null) setEmail(info.user.email);
 
-			setLogin(true);
+			const data = {
+				name: info.user.name,
+				email: info.user.email,
+				id: info.user.id,
+			};
+			postServer(data);
 		} catch (error) {
 			Alert.alert('로그인 실패', '구글 로그인에 실패했습니다.', [{ text: '확인' }]);
 		}
 	};
 
-	const welcome = () => {
-		navigation.navigate('QR');
-	};
-
 	return (
 		<SafeAreaView style={styles.container}>
-			{login ? (
-				<>
-					<View style={styles.welcome}>
-						<Text style={styles.text}>{`안녕하세요\n${name}님`}</Text>
-					</View>
-					<TouchableOpacity onPress={welcome}>
-						<Text style={styles.btn}>시작하기</Text>
-					</TouchableOpacity>
-				</>
-			) : (
-				<>
-					<View>
-						<Image source={logo} style={styles.logo} />
-					</View>
-					<GoogleSigninButton onPress={signIn} size={GoogleSigninButton.Size.Standard} />
-				</>
-			)}
+			<View>
+				<Image source={logo} style={styles.logo} />
+			</View>
+			<GoogleSigninButton onPress={signIn} size={GoogleSigninButton.Size.Standard} />
 		</SafeAreaView>
 	);
 }

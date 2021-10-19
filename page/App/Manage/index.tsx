@@ -1,11 +1,12 @@
-import React, { ReactElement } from 'react';
+/* eslint-disable react/no-array-index-key */
+import React, { ReactElement, useState } from 'react';
 import { SafeAreaView, View, Text, StyleSheet, Button } from 'react-native';
 import { ParamListBase } from '@react-navigation/native';
-import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
-interface Props {
-	navigation: NativeStackNavigationProp<ParamListBase, '관리 매장'>;
-}
+import ManageHome from './ManageHome';
+import ManageStock from './ManageStock';
+import TransactionHistory from './TransactionHistory';
 
 const styles = StyleSheet.create({
 	container: {
@@ -15,15 +16,35 @@ const styles = StyleSheet.create({
 	},
 });
 
-function Manage({ navigation }: Props): ReactElement {
+const ManageStack = createNativeStackNavigator();
+
+function ManageStackScreen(): ReactElement {
+	const [stack, setStack] = useState(<></>);
+
+	const onClick = () => {
+		console.log('click');
+	};
+
+	function Manage(): ReactElement {
+		const store = [{ name: '세종마트' }, { name: '세종대마트' }];
+
+		return (
+			<SafeAreaView style={styles.container}>
+				<View>
+					<Text>Manage</Text>
+					{store.map((s, index) => (
+						<Button key={index} onPress={onClick} title={s.name} />
+					))}
+				</View>
+			</SafeAreaView>
+		);
+	}
+
 	return (
-		<SafeAreaView style={styles.container}>
-			<View>
-				<Text>Manage</Text>
-				<Button title="세종마트" onPress={() => navigation.navigate('세종마트')} />
-			</View>
-		</SafeAreaView>
+		<ManageStack.Navigator>
+			<ManageStack.Screen name="매장관리" component={Manage} />
+		</ManageStack.Navigator>
 	);
 }
 
-export default Manage;
+export default ManageStackScreen;

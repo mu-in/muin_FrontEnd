@@ -69,11 +69,16 @@ const logo = require('../../../img/logo.png');
 function Home({ navigation }: Props): ReactElement {
 	const { name, manager, uuid } = useContext(UserContext);
 	const [sec, setSec] = useState(0);
+	const [qr, setQR] = useState('-');
+
+	/*
+	// totp
 	const [totp, setTotp] = useState(
 		TOTP(uuid, {
 			digits: 8,
-			algorithm: 'SHA-512',
+			algorithm: 'SHA-256',
 			period: 15,
+			timestamp: 1234567891010,
 		})
 	);
 
@@ -82,21 +87,17 @@ function Home({ navigation }: Props): ReactElement {
 		setTotp(
 			TOTP(uuid, {
 				digits: 8,
-				algorithm: 'SHA-512',
+				algorithm: 'SHA-256',
 				period: 15,
+				timestamp: 1234567891010,
 			})
 		);
+	};
+	*/
 
-		// RNTotp.generateOTP(
-		//	{
-		//		base32String: '123',
-		//		digits: 8,
-		//		period: 15,
-		//	},
-		//	(code) => {
-		//		setTotp(code);
-		//	}
-		// );
+	const qrcode = () => {
+		setQR(`${Date.now()}${uuid}`);
+		setSec(30);
 	};
 
 	useEffect(() => {
@@ -137,8 +138,8 @@ function Home({ navigation }: Props): ReactElement {
 								</View>
 							) : (
 								<View>
-									<QRCode value={totp.toString()} logo={logo} logoSize={50} size={200} />
-									<Text>{totp}</Text>
+									<QRCode value={qr.toString()} logo={logo} logoSize={50} size={200} />
+									<Text>{qr}</Text>
 								</View>
 							)}
 						</View>
