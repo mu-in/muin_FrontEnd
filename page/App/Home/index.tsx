@@ -4,10 +4,10 @@ import { ParamListBase } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
 import QRCode from 'react-native-qrcode-svg';
-import TOTP from 'totp-generator';
-import TagBtn from '../../../components/TagBtn';
+// import TOTP from 'totp-generator';
 
 import { UserContext } from '../Context';
+import TagBtn from '../../../components/TagBtn';
 
 interface Props {
 	navigation: NativeStackNavigationProp<ParamListBase, 'QR'>;
@@ -139,7 +139,7 @@ function Home({ navigation }: Props): ReactElement {
 							) : (
 								<View>
 									<QRCode value={qr.toString()} logo={logo} logoSize={50} size={200} />
-									<Text>{qr}</Text>
+									{/* <Text>{qr}</Text> */}
 								</View>
 							)}
 						</View>
