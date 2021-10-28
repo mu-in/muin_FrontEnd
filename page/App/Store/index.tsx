@@ -1,10 +1,14 @@
 import React, { ReactElement, useContext, useState } from 'react';
-import { SafeAreaView, View, Text, StyleSheet, Button, TouchableOpacity, ScrollView } from 'react-native';
+import { SafeAreaView, View, Text, TouchableOpacity, ScrollView } from 'react-native';
 import { ParamListBase } from '@react-navigation/native';
 import { createNativeStackNavigator, NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { Table, Row } from 'react-native-table-component';
 
 import Geolocation from '@react-native-community/geolocation';
+
 import { UserContext } from '../Context';
+
+import styles from '../../styles/Store';
 
 interface Props {
 	navigation: NativeStackNavigationProp<ParamListBase, '주변매장'>;
@@ -21,95 +25,71 @@ interface navigatorProps {
 	};
 }
 
-const styles = StyleSheet.create({
-	container: {
-		flex: 1,
-		justifyContent: 'center',
-		alignItems: 'center',
-		backgroundColor: '#ffffff',
-	},
-	top: {
-		position: 'absolute',
-		top: 0,
-		width: '100%',
-	},
-	top_l: {
-		margin: 50,
-		position: 'absolute',
-		left: 0,
-	},
-	top_r: {
-		margin: 30,
-		position: 'absolute',
-		right: 0,
-	},
-	box: {
-		backgroundColor: '#F2F2F2',
-		width: '100%',
-		position: 'absolute',
-		bottom: 0,
-		height: '78%',
-	},
-	displacement: {
-		width: 90,
-		height: 90,
-		backgroundColor: '#DAEBF5',
-		borderRadius: 20,
-		justifyContent: 'center',
-		alignItems: 'center',
-	},
-	bold_blue: {
-		color: '#0076BA',
-		fontWeight: 'bold',
-		fontSize: 15,
-	},
-	bold_black: {
-		color: '#000000',
-		fontWeight: 'bold',
-		fontSize: 20,
-	},
-	center: {
-		textAlign: 'center',
-		fontSize: 15,
-		marginTop: 150,
-		lineHeight: 25,
-		color: '#5E5E5E',
-	},
-	btn: {
-		height: 80,
-		borderRadius: 20,
-		backgroundColor: '#ffffff',
-		margin: 10,
-	},
-	btn_top: {
-		margin: 15,
-		marginLeft: 20,
-		fontWeight: 'bold',
-		fontSize: 15,
-	},
-	btn_bottom: {
-		marginLeft: 20,
-		color: '#5E5E5E',
-	},
-	btn_right: {
-		position: 'absolute',
-		right: 30,
-		top: 25,
-		color: '#298FFF',
-		fontWeight: 'bold',
-		fontSize: 20,
-	},
-});
-
 function StoreInfo(storeName: navigatorProps): ReactElement {
 	// eslint-disable-next-line react/destructuring-assignment
 	const market = storeName.route.params.storeName;
+	const info = {
+		name: market,
+		keyword: ['과자', '음료수', '아이스크림'],
+		address: '서울특별시 광진구 군자로 98',
+		products: [
+			{
+				category: '아이스크림',
+				name: '탱크보이',
+				quantity: 5,
+				price: 1200,
+			},
+			{
+				category: '아이스크림',
+				name: '폴라포',
+				quantity: 12,
+				price: 1300,
+			},
+			{
+				category: '과자',
+				name: '새우깡',
+				quantity: 12,
+				price: 1500,
+			},
+		],
+	};
 
 	return (
 		<SafeAreaView style={styles.container}>
-			<View>
-				<Text>{market}</Text>
-			</View>
+			<ScrollView style={styles.width100}>
+				<View style={styles.info}>
+					<Text style={styles.info_top}>{info.name}</Text>
+					<Text style={styles.info_mid}>{info.address}</Text>
+					<Text style={styles.info_bot}>
+						{info.keyword.map((key) => {
+							return `#${key}  `;
+						})}
+					</Text>
+				</View>
+				<View style={styles.product}>
+					<Text style={styles.info_top}>매장 재고</Text>
+					<View style={styles.tbl}>
+						<Table borderStyle={{ borderWidth: 1, borderColor: '#D5D5D5' }}>
+							<Row
+								data={['대분류', '상품명', '가격', '재고']}
+								flexArr={[2, 5, 2, 1]}
+								style={styles.tbl_head}
+								textStyle={styles.tbl_head_text}
+							/>
+							{info.products.map((p) => {
+								return (
+									<Row
+										data={[p.category, p.name, p.price, p.quantity]}
+										flexArr={[2, 5, 2, 1]}
+										style={styles.tbl_row}
+										textStyle={styles.tbl_row_text}
+									/>
+								);
+							})}
+						</Table>
+					</View>
+				</View>
+			</ScrollView>
 		</SafeAreaView>
 	);
 }
@@ -150,6 +130,12 @@ function StoreStackScreen(): ReactElement {
 						{ id: 1, storeName: '세종마트' },
 						{ id: 2, storeName: '세계로마트' },
 						{ id: 3, storeName: '하모니마트' },
+						{ id: 4, storeName: '세종마트2' },
+						{ id: 5, storeName: '세계로마트1' },
+						{ id: 6, storeName: '하모니마3트' },
+						{ id: 7, storeName: '세종5마트' },
+						{ id: 8, storeName: '세계7로마트' },
+						{ id: 9, storeName: '하모2니마트' },
 					];
 					setStore(data);
 				} else {

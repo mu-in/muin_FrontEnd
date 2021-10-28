@@ -6,7 +6,7 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import QRCode from 'react-native-qrcode-svg';
 // import TOTP from 'totp-generator';
 
-import { UserContext } from '../Context';
+import { UserContext, ServerContext } from '../Context';
 import TagBtn from '../../../components/TagBtn';
 
 interface Props {
@@ -67,7 +67,8 @@ const styles = StyleSheet.create({
 const logo = require('../../../img/logo.png');
 
 function Home({ navigation }: Props): ReactElement {
-	const { name, manager, uuid } = useContext(UserContext);
+	const { name, manager, uuid, jwt } = useContext(UserContext);
+	const { url } = useContext(ServerContext);
 	const [sec, setSec] = useState(0);
 	const [qr, setQR] = useState('-');
 
@@ -95,8 +96,16 @@ function Home({ navigation }: Props): ReactElement {
 	};
 	*/
 
-	const qrcode = () => {
-		setQR(`${Date.now()}${uuid}`);
+	const qrcode = async () => {
+		// const res = await fetch(`${url}/user/qrcode?seed=${Math.floor((Date.now() - 0) / 30)}:${uuid}`, {
+		//	method: 'GET',
+		//	headers: { Authorization: `Bearer ${jwt}` },
+		// });
+
+		// const data = await res.json();
+		// console.log(data);
+		setQR(`${Math.floor((Date.now() - 0) / 30)}:${uuid}`);
+		console.log(`${Math.floor((Date.now() - 0) / 30)}:${uuid}`);
 		setSec(30);
 	};
 
