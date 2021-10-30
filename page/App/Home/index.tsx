@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import React, { ReactElement, useEffect, useState, useContext } from 'react';
 import { SafeAreaView, View, Text, Alert, TouchableOpacity } from 'react-native';
 import { ParamListBase } from '@react-navigation/native';

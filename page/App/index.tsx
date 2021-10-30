@@ -31,7 +31,6 @@ function StoreStackScreen(): ReactElement {
 	return <Store />;
 }
 
-const ManageStack = createNativeStackNavigator();
 function ManageStackScreen(): ReactElement {
 	return <Manage />;
 }

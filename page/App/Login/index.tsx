@@ -1,5 +1,5 @@
 import React, { ReactElement, useContext } from 'react';
-import { SafeAreaView, View, StyleSheet, Alert, Image } from 'react-native';
+import { SafeAreaView, View, Alert, Image } from 'react-native';
 import { ParamListBase } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { GoogleSignin, GoogleSigninButton } from '@react-native-google-signin/google-signin';
@@ -7,11 +7,11 @@ import { GoogleSignin, GoogleSigninButton } from '@react-native-google-signin/go
 import { UserContext, ServerContext } from '../Context';
 import styles from '../../styles/Login';
 
+const logo = require('../../../img/logo.png');
+
 interface Props {
 	navigation: NativeStackNavigationProp<ParamListBase, 'Login'>;
 }
-
-const logo = require('../../../img/logo.png');
 
 function Login({ navigation }: Props): ReactElement {
 	const { setName, setEmail, setGoogle, setJwt, setUuid } = useContext(UserContext);

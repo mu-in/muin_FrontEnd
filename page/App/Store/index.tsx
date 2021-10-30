@@ -5,9 +5,7 @@ import { createNativeStackNavigator, NativeStackNavigationProp } from '@react-na
 import { Table, Row } from 'react-native-table-component';
 
 import Geolocation from '@react-native-community/geolocation';
-
 import { ServerContext, UserContext } from '../Context';
-
 import styles from '../../styles/Store';
 
 interface Props {
