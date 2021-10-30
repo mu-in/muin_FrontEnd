@@ -3,7 +3,7 @@
 /* eslint-disable func-names */
 
 import React, { ReactElement, useContext, useEffect, useState } from 'react';
-import { SafeAreaView, View, StyleSheet, Text, Button, TextInput, Alert } from 'react-native';
+import { SafeAreaView, View, Text, Button, TextInput, Alert } from 'react-native';
 import { ParamListBase } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
@@ -11,73 +11,11 @@ import Title from '../../../components/Title';
 import TagBtn from '../../../components/TagBtn';
 
 import { UserContext } from '../Context';
+import styles from '../../styles/AuthManager';
 
 interface Props {
 	navigation: NativeStackNavigationProp<ParamListBase, '매니저 인증'>;
 }
-
-const styles = StyleSheet.create({
-	container: {
-		flex: 1,
-		backgroundColor: '#ffffff',
-	},
-
-	box: {
-		justifyContent: 'center',
-		alignItems: 'center',
-		margin: 50,
-		marginTop: 30,
-		borderBottomWidth: 1,
-		borderColor: '#D5D5D5',
-	},
-
-	box2: {
-		position: 'absolute',
-		justifyContent: 'flex-start',
-		margin: 50,
-		top: 210,
-	},
-
-	keyword: {
-		flexDirection: 'row',
-		flexWrap: 'wrap',
-	},
-
-	input: {
-		color: '#298FFF',
-	},
-
-	btn: {
-		position: 'absolute',
-		bottom: 200,
-		left: 50,
-		right: 50,
-	},
-
-	btn2: {
-		justifyContent: 'space-evenly',
-		alignItems: 'center',
-		marginTop: 200,
-		flexDirection: 'row',
-		flexWrap: 'wrap',
-	},
-
-	text: {
-		marginBottom: 20,
-		textAlign: 'left',
-		width: '100%',
-		fontSize: 18,
-		color: '#5E5E5E',
-	},
-
-	bold: {
-		marginTop: 30,
-		textAlign: 'left',
-		width: '100%',
-		fontWeight: 'bold',
-		fontSize: 18,
-	},
-});
 
 const answers = {
 	serial: '',

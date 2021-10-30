@@ -6,7 +6,7 @@ import { Table, Row } from 'react-native-table-component';
 
 import Geolocation from '@react-native-community/geolocation';
 
-import { UserContext } from '../Context';
+import { ServerContext, UserContext } from '../Context';
 
 import styles from '../../styles/Store';
 
@@ -96,53 +96,77 @@ function StoreInfo(storeName: navigatorProps): ReactElement {
 
 const StoreStack = createNativeStackNavigator();
 function StoreStackScreen(): ReactElement {
-	const [store, setStore] = useState([{ id: 0, storeName: '-' }]);
+	const [store, setStore] = useState([
+		{
+			address: '-',
+			distance: 0,
+			managerName: null,
+			name: '-',
+			storeUuid: '-',
+		},
+	]);
 	const [meter, setMeter] = useState('조회');
+	const { jwt } = useContext(UserContext);
+	const { url } = useContext(ServerContext);
 
 	const location = () => {
-		let m;
 		Geolocation.getCurrentPosition(
-			(position) => {
+			async (position) => {
 				const lati = JSON.stringify(position.coords.latitude);
 				const longi = JSON.stringify(position.coords.longitude);
 
 				if (meter === '조회') {
 					setMeter('500 m');
-					m = 500;
-					// 뭔가 여기서 서버에서 가져와
-					const data = [{ id: 1, storeName: '세종마트' }]; // 예시
+
+					const res = await fetch(
+						`${url}/stores/location?lat=${37.55085776427549}&lon=${127.07542715582301}&distance=${0.5}`,
+						{
+							method: 'GET',
+							headers: { Authorization: `Bearer ${jwt}` },
+						}
+					);
+
+					const data = await res.json();
 					setStore(data);
 				}
 				if (meter === '500 m') {
 					setMeter('1 km');
-					m = 1000;
-					// 예시
-					const data = [
-						{ id: 1, storeName: '세종마트' },
-						{ id: 2, storeName: '세계로마트' },
-					];
+
+					const res = await fetch(
+						`${url}/stores/location?lat=${37.55085776427549}&lon=${127.07542715582301}&distance=${1}`,
+						{
+							method: 'GET',
+							headers: { Authorization: `Bearer ${jwt}` },
+						}
+					);
+
+					const data = await res.json();
 					setStore(data);
 				} else if (meter === '1 km') {
 					setMeter('2 km');
-					m = 2000;
-					// 예시
-					const data = [
-						{ id: 1, storeName: '세종마트' },
-						{ id: 2, storeName: '세계로마트' },
-						{ id: 3, storeName: '하모니마트' },
-						{ id: 4, storeName: '세종마트2' },
-						{ id: 5, storeName: '세계로마트1' },
-						{ id: 6, storeName: '하모니마3트' },
-						{ id: 7, storeName: '세종5마트' },
-						{ id: 8, storeName: '세계7로마트' },
-						{ id: 9, storeName: '하모2니마트' },
-					];
+
+					const res = await fetch(
+						`${url}/stores/location?lat=${37.55085776427549}&lon=${127.07542715582301}&distance=${2}`,
+						{
+							method: 'GET',
+							headers: { Authorization: `Bearer ${jwt}` },
+						}
+					);
+
+					const data = await res.json();
 					setStore(data);
 				} else {
 					setMeter('500 m');
-					m = 500;
-					// 예시
-					const data = [{ id: 1, storeName: '세종마트' }];
+
+					const res = await fetch(
+						`${url}/stores/location?lat=${37.55085776427549}&lon=${127.07542715582301}&distance=${0.5}`,
+						{
+							method: 'GET',
+							headers: { Authorization: `Bearer ${jwt}` },
+						}
+					);
+
+					const data = await res.json();
 					setStore(data);
 				}
 			},
@@ -174,17 +198,17 @@ function StoreStackScreen(): ReactElement {
 					{store.map((s) => {
 						return (
 							<View>
-								{s.id === 0 ? (
+								{s.storeUuid === '-' ? (
 									<Text style={styles.center}>{'사용자 위치 권한 승인 후\n매장 조회가 가능합니다.'}</Text>
 								) : (
 									<TouchableOpacity
-										key={s.id}
+										key={s.storeUuid}
 										style={styles.btn}
-										onPress={() => navigation.navigate(s.storeName, { storeName: s.storeName })}
+										onPress={() => navigation.navigate(s.name, { storeName: s.name })}
 									>
-										<Text style={styles.btn_top}>{s.storeName}</Text>
-										<Text style={styles.btn_bottom}>서울특별시 광진구 군자로 98</Text>
-										<Text style={styles.btn_right}>29 m</Text>
+										<Text style={styles.btn_top}>{s.name}</Text>
+										<Text style={styles.btn_bottom}>{s.address}</Text>
+										<Text style={styles.btn_right}>{`${Math.round(s.distance * 1000).toString()} m`}</Text>
 									</TouchableOpacity>
 								)}
 							</View>
@@ -199,7 +223,7 @@ function StoreStackScreen(): ReactElement {
 		<StoreStack.Navigator>
 			<StoreStack.Screen name="주변매장" component={Store} />
 			{store.map((s) => {
-				return <StoreStack.Screen name={s.storeName} component={StoreInfo} />;
+				return <StoreStack.Screen name={s.name} component={StoreInfo} />;
 			})}
 		</StoreStack.Navigator>
 	);

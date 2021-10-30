@@ -29,6 +29,8 @@ const styles = StyleSheet.create({
 		position: 'absolute',
 		bottom: 0,
 		height: '78%',
+		paddingTop: 10,
+		paddingBottom: 10,
 	},
 	displacement: {
 		width: 90,
@@ -60,8 +62,8 @@ const styles = StyleSheet.create({
 		height: 80,
 		borderRadius: 20,
 		backgroundColor: '#ffffff',
-		margin: 20,
-		marginBottom: 0,
+		margin: 10,
+		marginBottom: 10,
 	},
 	btn_top: {
 		margin: 15,
