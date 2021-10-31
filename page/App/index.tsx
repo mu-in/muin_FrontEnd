@@ -11,6 +11,7 @@ import AuthManager from './AuthManager';
 
 import Store from './Store';
 import Manage from './Manage';
+import Test from './Test';
 
 import { UserContextProvider, UserContext } from './Context';
 
@@ -62,6 +63,7 @@ function TabScreen(): ReactElement {
 				<Tab.Screen name="관리" component={ManageStackScreen} />
 				{name !== '-' ? <Tab.Screen name="매장" component={StoreStackScreen} /> : null}
 				{/* manager === true ? <Tab.Screen name="관리" component={ManageStackScreen} /> : null */}
+				{/* <Tab.Screen name="Test" component={Test} /> */}
 			</Tab.Navigator>
 		</NavigationContainer>
 	);

@@ -204,7 +204,7 @@ function StoreStackScreen(): ReactElement {
 										style={styles.btn}
 										onPress={() => navigation.navigate(s.name, { storeName: s.name })}
 									>
-										<Text style={styles.btn_top}>{s.name}</Text>
+										<Text style={styles.btn_top}>{s.name.split('_')[0]}</Text>
 										<Text style={styles.btn_bottom}>{s.address}</Text>
 										<Text style={styles.btn_right}>{`${Math.round(s.distance * 1000).toString()} m`}</Text>
 									</TouchableOpacity>

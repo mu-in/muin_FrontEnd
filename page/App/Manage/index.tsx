@@ -1,239 +1,28 @@
-import React, { ReactElement } from 'react';
-import { SafeAreaView, ScrollView, TouchableOpacity, View, Text, StyleSheet, Dimensions, FlatList } from 'react-native';
+import React, { ReactElement, useState } from 'react';
+import {
+	SafeAreaView,
+	ScrollView,
+	TouchableOpacity,
+	Modal,
+	View,
+	Text,
+	Dimensions,
+	FlatList,
+	Alert,
+} from 'react-native';
+
 import { ParamListBase } from '@react-navigation/native';
 import { createNativeStackNavigator, NativeStackNavigationProp } from '@react-navigation/native-stack';
+
 import { LineChart } from 'react-native-chart-kit';
 import { Table, Row } from 'react-native-table-component';
+import InputSpinner from 'react-native-input-spinner';
+import { BlurView } from '@react-native-community/blur';
+import SelectDropdown from 'react-native-select-dropdown';
+import Icon from 'react-native-vector-icons/Ionicons';
 
-const styles = StyleSheet.create({
-	container: {
-		flex: 1,
-		justifyContent: 'center',
-		alignItems: 'center',
-	},
-	box: {
-		backgroundColor: '#F2F2F2',
-		width: '100%',
-		height: '100%',
-		position: 'absolute',
-	},
-	btn: {
-		borderRadius: 20,
-		backgroundColor: '#ffffff',
-		margin: 20,
-		marginBottom: 0,
-		height: 80,
-	},
-	btn_top: {
-		margin: 15,
-		marginLeft: 20,
-		fontWeight: 'bold',
-		fontSize: 15,
-	},
-	btn_bottom: {
-		marginLeft: 20,
-		color: '#5E5E5E',
-	},
-	btn_right: {
-		position: 'absolute',
-		right: 30,
-		top: 25,
-		color: '#298FFF',
-		fontWeight: 'bold',
-		fontSize: 20,
-	},
-	btn_right_bold: {
-		position: 'absolute',
-		right: 30,
-		top: 23,
-		color: '#298FFF',
-		fontWeight: 'bold',
-		fontSize: 25,
-	},
-	btn_right_text: {
-		fontSize: 15,
-		color: '#5E5E5E',
-	},
-	create_btn: {
-		borderRadius: 18,
-		backgroundColor: '#298FFF',
-		margin: 20,
-		marginBottom: 0,
-		height: 60,
-	},
-	create_center: {
-		textAlign: 'center',
-		marginTop: 20,
-		fontWeight: 'bold',
-		fontSize: 20,
-		color: '#ffffff',
-	},
-	sales: {
-		borderRadius: 20,
-		backgroundColor: '#ffffff',
-		margin: 20,
-	},
-	border_t: {
-		margin: 20,
-		marginBottom: 0,
-		fontWeight: 'bold',
-		fontSize: 18,
-	},
-	border_tr: {
-		position: 'absolute',
-		right: 30,
-		top: 15,
-		color: '#298FFF',
-		fontWeight: 'bold',
-		fontSize: 20,
-	},
-	tbl: {
-		margin: 20,
-	},
-	tbl_row: {
-		height: 25,
-		textAlign: 'center',
-	},
-	tbl_text: {
-		color: '#5E5E5E',
-		fontSize: 10,
-	},
-	real: {
-		margin: 20,
-		marginTop: 0,
-	},
-	real_l: {
-		position: 'absolute',
-		top: 0,
-		left: 0,
-		borderRadius: 18,
-		backgroundColor: '#ffffff',
-		width: '48%',
-	},
-	real_r: {
-		position: 'absolute',
-		top: 0,
-		right: 0,
-		borderRadius: 18,
-		backgroundColor: '#ffffff',
-		width: '48%',
-	},
-	real_pay: {
-		margin: 20,
-		textAlign: 'center',
-		color: '#5E5E5E',
-		fontSize: 23,
-	},
-	statics: {
-		borderRadius: 20,
-		backgroundColor: '#ffffff',
-		margin: 20,
-		marginTop: 110,
-		height: 300,
-	},
-	graph: {
-		marginTop: 20,
-	},
-	stock: {
-		borderRadius: 20,
-		backgroundColor: '#ffffff',
-		margin: 20,
-		marginTop: 0,
-		height: 120,
-	},
-	stock_tag: {
-		margin: 20,
-	},
-	stock_l: {
-		position: 'absolute',
-		top: 0,
-		left: 0,
-		width: '48%',
-	},
-	stock_r: {
-		position: 'absolute',
-		top: 0,
-		right: 0,
-		width: '48%',
-	},
-	tag_text: {
-		position: 'absolute',
-		top: 5,
-		left: 75,
-		color: '#5E5E5E',
-		fontSize: 15,
-	},
-	tag_red: {
-		backgroundColor: '#ED220D',
-		borderWidth: 1,
-		borderColor: '#ED220D',
-		borderRadius: 10,
-		overflow: 'hidden',
-		padding: 5,
-		paddingRight: 15,
-		paddingLeft: 15,
-		margin: 5,
-		color: '#ffffff',
-		fontSize: 15,
-		fontWeight: 'bold',
-		width: 60,
-	},
-	tag_yellow: {
-		backgroundColor: '#FEAE00',
-		borderWidth: 1,
-		borderColor: '#FEAE00',
-		borderRadius: 10,
-		overflow: 'hidden',
-		padding: 5,
-		paddingRight: 15,
-		paddingLeft: 15,
-		margin: 5,
-		color: '#ffffff',
-		fontSize: 15,
-		fontWeight: 'bold',
-		width: 60,
-	},
-	tag_blue: {
-		position: 'absolute',
-		left: 20,
-		top: 20,
-		backgroundColor: '#298FFF',
-		borderWidth: 1,
-		borderColor: '#298FFF',
-		borderRadius: 10,
-		overflow: 'hidden',
-		padding: 5,
-		paddingRight: 15,
-		paddingLeft: 15,
-		margin: 5,
-		color: '#ffffff',
-		fontSize: 15,
-		fontWeight: 'bold',
-	},
-	red: {
-		fontWeight: 'bold',
-		color: '#ED220D',
-		fontSize: 20,
-	},
-	yellow: {
-		fontWeight: 'bold',
-		color: '#FEAE00',
-		fontSize: 20,
-	},
-	allSales: {
-		borderRadius: 20,
-		backgroundColor: '#ffffff',
-		margin: 20,
-		height: '100%',
-	},
-	tbl_pay: {
-		marginLeft: 30,
-		marginRight: 20,
-	},
-	margin_t: {
-		marginTop: 20,
-	},
-});
+import styles from '../../styles/Manage';
+import modal from '../../styles/Modal';
 
 interface Props {
 	navigation: NativeStackNavigationProp<ParamListBase, '관리매장'>;
@@ -310,7 +99,9 @@ function ManageStackScreen(): ReactElement {
 				<ScrollView style={styles.box}>
 					<TouchableOpacity style={styles.sales} onPress={() => navigation.navigate('최근거래')}>
 						<Text style={styles.border_t}>최근 거래</Text>
-						<Text style={styles.border_tr}>{'>'}</Text>
+						<Text style={styles.border_tr}>
+							<Icon name="ios-arrow-forward" size={30} />
+						</Text>
 						<Table style={styles.tbl} borderStyle={{ borderWidth: 1, borderColor: '#ffffff' }}>
 							{recentPayments.map((p) => {
 								return (
@@ -347,7 +138,9 @@ function ManageStackScreen(): ReactElement {
 					</View>
 					<TouchableOpacity style={styles.stock} onPress={() => navigation.navigate('재고관리')}>
 						<Text style={styles.border_t}>매장 재고</Text>
-						<Text style={styles.border_tr}>{'>'}</Text>
+						<Text style={styles.border_tr}>
+							<Icon name="ios-arrow-forward" size={30} />
+						</Text>
 						<View style={styles.stock_tag}>
 							<View style={styles.stock_l}>
 								<Text style={styles.tag_red}>품절</Text>
@@ -409,44 +202,191 @@ function ManageStackScreen(): ReactElement {
 
 	function Stock({ navigation }: Props4): ReactElement {
 		const storeName = navigation.getState().routes[1].name;
+		const [allStock, setAllStock] = useState(false);
+		const [createStock, setCreateStock] = useState(false);
+		const [manageStock, setManageStock] = useState(false);
+		const [category, setCategory] = useState('');
+		const [stock, setStock] = useState([{ name: '-', quantity: 0, price: 0 }]);
+
+		const countries = ['Egypt', 'Canada', 'Australia', 'Ireland'];
+
 		const products = [
 			{
 				category: '과자',
 				stock: [
-					{ name: '새우깡', quantity: 15 },
-					{ name: '빼빼로', quantity: 145 },
+					{ name: '새우깡', quantity: 15, price: 1200 },
+					{ name: '빼빼로', quantity: 145, price: 1300 },
 				],
 			},
 			{
 				category: '아이스크림',
 				stock: [
-					{ name: '빠삐코', quantity: 315 },
-					{ name: '탱크보이', quantity: 0 },
-					{ name: '젤리뽀', quantity: 9 },
+					{ name: '빠삐코', quantity: 315, price: 800 },
+					{ name: '탱크보이', quantity: 0, price: 800 },
+					{ name: '젤리뽀', quantity: 9, price: 900 },
 				],
 			},
 		];
 
+		const onClick = (cate: string) => {
+			setManageStock(true);
+			setCategory(cate);
+			const st = products.find((x) => x.category === cate)?.stock;
+			if (st !== undefined) {
+				setStock(st);
+			}
+		};
+
 		return (
 			<SafeAreaView style={styles.container}>
-				<ScrollView style={styles.box}>
-					{products.map((p) => {
-						return (
-							<TouchableOpacity style={styles.btn}>
-								<Text style={styles.tag_blue}>{p.category}</Text>
-								<Text style={styles.btn_right_bold}>
-									{p.stock.length} <Text style={styles.btn_right_text}>상품</Text>
-								</Text>
-							</TouchableOpacity>
-						);
-					})}
-
-					<TouchableOpacity style={styles.create_btn}>
+				<View style={modal.centeredView}>
+					{/* 한 눈에 보기 */}
+					<Modal
+						animationType="slide"
+						transparent
+						visible={allStock}
+						onRequestClose={() => {
+							setAllStock(!allStock);
+						}}
+					>
+						<View style={modal.centeredView}>
+							<View style={modal.modalView}>
+								<Text style={modal.modalText}>한 눈에 보기</Text>
+								<TouchableOpacity style={[modal.closs]} onPress={() => setAllStock(!allStock)}>
+									<Text style={modal.closs_btn}>X</Text>
+								</TouchableOpacity>
+							</View>
+						</View>
+					</Modal>
+					{/* 상품 추가 */}
+					<Modal
+						animationType="fade"
+						transparent
+						visible={createStock}
+						onRequestClose={() => {
+							setCreateStock(!createStock);
+						}}
+					>
+						<BlurView style={modal.centeredView} blurType="light">
+							<View style={[modal.modalView, modal.modalShort]}>
+								<Text style={modal.modalText}>상품 추가</Text>
+								<TouchableOpacity style={[modal.closs]} onPress={() => setCreateStock(!createStock)}>
+									<Text style={modal.closs_btn}>X</Text>
+								</TouchableOpacity>
+								<View style={modal.container}>
+									<SelectDropdown
+										data={countries}
+										onSelect={(selectedItem, index) => {
+											console.log(selectedItem, index);
+										}}
+										buttonTextAfterSelection={(selectedItem, index) => {
+											return selectedItem;
+										}}
+										rowTextForSelection={(item, index) => {
+											return item;
+										}}
+									/>
+									<Text>ㅎㅇㅎ??????????ㅇ</Text>
+								</View>
+							</View>
+						</BlurView>
+					</Modal>
+					{/* 재고 관리 */}
+					<Modal
+						animationType="fade"
+						transparent
+						visible={manageStock}
+						onRequestClose={() => {
+							setManageStock(!manageStock);
+						}}
+					>
+						<BlurView style={modal.centeredView} blurType="light">
+							<View style={modal.modalView}>
+								<Text style={modal.modalText}>{category}</Text>
+								<TouchableOpacity style={[modal.closs]} onPress={() => setManageStock(!manageStock)}>
+									<Text style={modal.closs_btn}>X</Text>
+								</TouchableOpacity>
+								<ScrollView style={modal.container}>
+									{stock.map((s) => {
+										return (
+											<View style={modal.box}>
+												<Text style={modal.stock_l}>{s.name}</Text>
+												<InputSpinner
+													style={modal.stock_r}
+													max={9999}
+													min={0}
+													step={1}
+													height={30}
+													fontSize={20}
+													value={s.quantity}
+													color="#2196F3"
+													colorPress="#60D937"
+													onChange={(num) => {
+														console.log(num);
+													}}
+												/>
+												<Text style={modal.stock_price}>{s.price}</Text>
+												{/**
+												<TouchableOpacity style={[modal.change]}>
+													<Text style={modal.tag_text}>변경</Text>
+												</TouchableOpacity>
+												 */}
+												<TouchableOpacity
+													style={modal.delete}
+													onPress={() =>
+														Alert.alert('상품 삭제', `${s.name} 을 삭제하시겠습니까?`, [
+															{
+																text: 'Cancel',
+																style: 'cancel',
+															},
+															{ text: 'OK', onPress: () => console.log('OK Pressed') },
+														])
+													}
+												>
+													<Text style={modal.tag_text}>삭제</Text>
+												</TouchableOpacity>
+												<View style={modal.hr} />
+											</View>
+										);
+									})}
+								</ScrollView>
+							</View>
+						</BlurView>
+					</Modal>
+				</View>
+				<View style={styles.box}>
+					<ScrollView>
+						{products.map((p) => {
+							return (
+								<TouchableOpacity style={styles.btn} onPress={() => onClick(p.category)}>
+									<Text style={styles.tag_blue}>{p.category}</Text>
+									<Text style={styles.btn_right_bold}>
+										{p.stock.length} <Text style={styles.btn_right_text}> 상품</Text>
+									</Text>
+								</TouchableOpacity>
+							);
+						})}
+					</ScrollView>
+					{/**
+					<TouchableOpacity style={styles.btn_tl} onPress={() => setAllStock(true)}>
 						<View>
-							<Text style={styles.create_center}>상품 추가</Text>
+							<Text style={styles.create_center_black_s}>한 눈에 보기</Text>
 						</View>
 					</TouchableOpacity>
-				</ScrollView>
+					<TouchableOpacity style={styles.btn_tr} onPress={() => setCreateStock(true)}>
+						<View>
+							<Text style={styles.create_center_s}>상품 추가</Text>
+						</View>
+					</TouchableOpacity>
+					 */}
+					<View style={styles.bottom}>
+						<TouchableOpacity style={styles.create_btn} onPress={() => setCreateStock(true)}>
+							<View>
+								<Text style={styles.create_center_s}>상품 추가</Text>
+							</View>
+						</TouchableOpacity>
+					</View>
+				</View>
 			</SafeAreaView>
 		);
 	}
@@ -461,7 +401,9 @@ function ManageStackScreen(): ReactElement {
 								<View>
 									<Text style={styles.btn_top}>{s.name}</Text>
 									<Text style={styles.btn_bottom}>{s.address}</Text>
-									<Text style={styles.btn_right}>{'>'}</Text>
+									<Text style={styles.btn_right}>
+										<Icon name="ios-arrow-forward" size={30} />
+									</Text>
 								</View>
 							</TouchableOpacity>
 						);

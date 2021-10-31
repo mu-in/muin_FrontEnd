@@ -14,6 +14,7 @@
     "lint:fix": "eslint --fix './**/*.{ts,tsx}'"
   },
   "dependencies": {
+    "@react-native-community/blur": "^3.6.0",
     "@react-native-community/geolocation": "^2.0.2",
     "@react-native-google-signin/google-signin": "^7.0.1",
     "@react-navigation/bottom-tabs": "^6.0.5",
@@ -26,9 +27,11 @@
     "react-dom": "^17.0.2",
     "react-native": "0.64.1",
     "react-native-chart-kit": "^6.11.0",
+    "react-native-input-spinner": "^1.7.12",
     "react-native-qrcode-svg": "^6.1.1",
     "react-native-safe-area-context": "^3.3.0",
     "react-native-screens": "^3.5.0",
+    "react-native-select-dropdown": "^1.2.0",
     "react-native-svg": "^12.1.1",
     "react-native-table-component": "^1.2.1",
     "react-native-vector-icons": "^8.1.0",
