@@ -1,79 +1,36 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import React, { ReactElement, useEffect, useState, useContext } from 'react';
-import { SafeAreaView, View, StyleSheet, Text, Alert, TouchableOpacity } from 'react-native';
+import { SafeAreaView, View, Text, Alert, TouchableOpacity } from 'react-native';
 import { ParamListBase } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
 import QRCode from 'react-native-qrcode-svg';
-import TOTP from 'totp-generator';
-import TagBtn from '../../../components/TagBtn';
+// import TOTP from 'totp-generator';
 
-import { UserContext } from '../Context';
+import { UserContext, ServerContext } from '../Context';
+import TagBtn from '../../../components/TagBtn';
+import styles from '../../styles/Home';
 
 interface Props {
 	navigation: NativeStackNavigationProp<ParamListBase, 'QR'>;
 }
 
-const styles = StyleSheet.create({
-	container: {
-		flex: 1,
-		justifyContent: 'center',
-		alignItems: 'center',
-	},
-	box: {
-		justifyContent: 'center',
-		alignItems: 'center',
-		borderRadius: 20,
-		width: '80%',
-		height: 400,
-		backgroundColor: '#ffffff',
-	},
-	box_tr: {
-		margin: 25,
-		position: 'absolute',
-		top: 0,
-		left: 0,
-		fontSize: 18,
-		fontWeight: 'bold',
-	},
-	box_tl: {
-		margin: 15,
-		position: 'absolute',
-		top: 0,
-		right: 0,
-	},
-	box_b: {
-		margin: 50,
-		position: 'absolute',
-		bottom: 0,
-	},
-	text: {
-		margin: 10,
-		color: '#5E5E5E',
-		position: 'absolute',
-		top: 30,
-		fontSize: 18,
-		textAlign: 'center',
-	},
-	qr: {
-		backgroundColor: '#ffffff',
-	},
-	qr_btn: {
-		color: '#FF644E',
-		fontWeight: 'bold',
-		fontSize: 20,
-	},
-});
-
 const logo = require('../../../img/logo.png');
 
 function Home({ navigation }: Props): ReactElement {
-	const { name, manager, uuid } = useContext(UserContext);
+	const { name, manager, uuid, jwt } = useContext(UserContext);
+	const { url } = useContext(ServerContext);
 	const [sec, setSec] = useState(0);
+	const [qr, setQR] = useState('-');
+
+	/*
+	// totp
 	const [totp, setTotp] = useState(
 		TOTP(uuid, {
 			digits: 8,
-			algorithm: 'SHA-512',
+			algorithm: 'SHA-256',
 			period: 15,
+			timestamp: 1234567891010,
 		})
 	);
 
@@ -82,21 +39,25 @@ function Home({ navigation }: Props): ReactElement {
 		setTotp(
 			TOTP(uuid, {
 				digits: 8,
-				algorithm: 'SHA-512',
+				algorithm: 'SHA-256',
 				period: 15,
+				timestamp: 1234567891010,
 			})
 		);
+	};
+	*/
 
-		// RNTotp.generateOTP(
-		//	{
-		//		base32String: '123',
-		//		digits: 8,
-		//		period: 15,
-		//	},
-		//	(code) => {
-		//		setTotp(code);
-		//	}
-		// );
+	const qrcode = async () => {
+		// const res = await fetch(`${url}/user/qrcode?seed=${Date.now()}:${uuid}`, {
+		//	method: 'GET',
+		//	headers: { Authorization: `Bearer ${jwt}` },
+		// });
+
+		// const data = await res.json();
+		// console.log(data);
+
+		setQR(`${Date.now}:${uuid}`);
+		setSec(30);
 	};
 
 	useEffect(() => {
@@ -137,8 +98,8 @@ function Home({ navigation }: Props): ReactElement {
 								</View>
 							) : (
 								<View>
-									<QRCode value={totp.toString()} logo={logo} logoSize={50} size={200} />
-									<Text>{totp}</Text>
+									<QRCode value={qr.toString()} logo={logo} logoSize={50} size={200} />
+									{/* <Text>{qr}</Text> */}
 								</View>
 							)}
 						</View>

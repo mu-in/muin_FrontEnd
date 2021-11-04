@@ -1,0 +1,142 @@
+import { StyleSheet } from 'react-native';
+
+const modal = StyleSheet.create({
+	centeredView: {
+		flex: 1,
+		justifyContent: 'center',
+		alignItems: 'center',
+		marginTop: 22,
+	},
+	modalView: {
+		width: '90%',
+		height: '77%',
+		margin: 20,
+		backgroundColor: 'white',
+		borderRadius: 20,
+		alignItems: 'center',
+		shadowColor: '#000',
+		shadowOffset: {
+			width: 0,
+			height: 2,
+		},
+		shadowOpacity: 0.25,
+		shadowRadius: 4,
+		elevation: 5,
+	},
+	modalShort: {
+		height: '50%',
+	},
+	button: {
+		borderRadius: 12,
+		padding: 10,
+		elevation: 2,
+	},
+	closs: {
+		position: 'absolute',
+		top: 30,
+		right: 30,
+	},
+	closs_btn: {
+		color: '#298FFF',
+		fontSize: 20,
+		fontWeight: 'bold',
+	},
+	buttonOpen: {
+		backgroundColor: '#F194FF',
+	},
+	buttonClose: {
+		backgroundColor: '#2196F3',
+	},
+	textStyle: {
+		color: 'white',
+		fontWeight: 'bold',
+		textAlign: 'center',
+	},
+	modalText: {
+		position: 'absolute',
+		top: 30,
+		left: 30,
+		fontSize: 20,
+		fontWeight: 'bold',
+		color: '#000000',
+	},
+	container: {
+		position: 'relative',
+		marginTop: 70,
+		width: '100%',
+		height: 80,
+		paddingLeft: 30,
+		paddingRight: 30,
+	},
+	box: {
+		marginTop: 20,
+	},
+	hr: {
+		marginTop: 100,
+		borderBottomColor: '#D5D5D5',
+		borderBottomWidth: 1,
+	},
+	stock_l: {
+		position: 'absolute',
+		top: 10,
+		left: 0,
+		fontWeight: 'bold',
+		color: '#5E5E5E',
+		fontSize: 15,
+	},
+	store_m: {
+		right: 0,
+		top: 3,
+		position: 'absolute',
+		width: '45%',
+	},
+	stock_r: {
+		left: 0,
+		top: 50,
+		position: 'absolute',
+		width: '60%',
+	},
+	change: {
+		position: 'absolute',
+		top: 52,
+		right: 70,
+		backgroundColor: '#60D937',
+		borderWidth: 1,
+		borderColor: '#60D937',
+		borderRadius: 10,
+		overflow: 'hidden',
+		padding: 5,
+		paddingRight: 15,
+		paddingLeft: 15,
+		width: 60,
+	},
+	delete: {
+		position: 'absolute',
+		top: 52,
+		right: 0,
+		backgroundColor: '#5E5E5E',
+		borderWidth: 1,
+		borderColor: '#5E5E5E',
+		borderRadius: 10,
+		overflow: 'hidden',
+		padding: 5,
+		paddingRight: 15,
+		paddingLeft: 15,
+		width: 60,
+	},
+	tag_text: {
+		color: '#ffffff',
+		fontSize: 15,
+		fontWeight: 'bold',
+	},
+	stock_price: {
+		position: 'absolute',
+		right: 0,
+		top: 10,
+		fontWeight: 'bold',
+		color: '#5E5E5E',
+		fontSize: 15,
+	},
+});
+
+export default modal;

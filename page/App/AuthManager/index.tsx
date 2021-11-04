@@ -1,93 +1,34 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable no-console */
 /* eslint-disable consistent-return */
 /* eslint-disable func-names */
 
 import React, { ReactElement, useContext, useEffect, useState } from 'react';
-import { SafeAreaView, View, StyleSheet, Text, Button, TextInput, Alert } from 'react-native';
+import { SafeAreaView, View, Text, Button, TextInput, Alert } from 'react-native';
 import { ParamListBase } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
 import Title from '../../../components/Title';
 import TagBtn from '../../../components/TagBtn';
 
-import { UserContext } from '../Context';
+import { ServerContext, UserContext } from '../Context';
+import styles from '../../styles/AuthManager';
 
 interface Props {
 	navigation: NativeStackNavigationProp<ParamListBase, '매니저 인증'>;
 }
 
-const styles = StyleSheet.create({
-	container: {
-		flex: 1,
-		backgroundColor: '#ffffff',
-	},
-
-	box: {
-		justifyContent: 'center',
-		alignItems: 'center',
-		margin: 50,
-		marginTop: 30,
-		borderBottomWidth: 1,
-		borderColor: '#D5D5D5',
-	},
-
-	box2: {
-		position: 'absolute',
-		justifyContent: 'flex-start',
-		margin: 50,
-		top: 210,
-	},
-
-	keyword: {
-		flexDirection: 'row',
-		flexWrap: 'wrap',
-	},
-
-	input: {
-		color: '#298FFF',
-	},
-
-	btn: {
-		position: 'absolute',
-		bottom: 200,
-		left: 50,
-		right: 50,
-	},
-
-	btn2: {
-		justifyContent: 'space-evenly',
-		alignItems: 'center',
-		marginTop: 200,
-		flexDirection: 'row',
-		flexWrap: 'wrap',
-	},
-
-	text: {
-		marginBottom: 20,
-		textAlign: 'left',
-		width: '100%',
-		fontSize: 18,
-		color: '#5E5E5E',
-	},
-
-	bold: {
-		marginTop: 30,
-		textAlign: 'left',
-		width: '100%',
-		fontWeight: 'bold',
-		fontSize: 18,
-	},
-});
-
 const answers = {
 	serial: '',
 	store: '',
 	address: '',
-	keyword: '',
+	keyword: [''],
 };
 
 function AuthManager({ navigation }: Props): ReactElement {
-	const { manager, setManager } = useContext(UserContext);
+	const { manager, setManager, jwt, uuid } = useContext(UserContext);
+	const { url } = useContext(ServerContext);
+
 	const [answer, setAnswer] = useState('');
 	const [page, setPage] = useState(0);
 
@@ -111,17 +52,6 @@ function AuthManager({ navigation }: Props): ReactElement {
 			Alert.alert('경고', '문자를 입력하세요.', [{ text: '확인' }]);
 			return;
 		}
-		if (page === 3) {
-			let str = '';
-
-			if (key1 === true) str += `, 아이스크림`;
-			if (key2 === true) str += ', 과자';
-			if (key3 === true) str += ', 음료수';
-			if (key4 === true) str += ', 라면';
-			if (key5 === true) str += ', 일회용품';
-
-			setAnswer(str);
-		}
 
 		if (page === 0) {
 			answers.serial = answer;
@@ -130,16 +60,63 @@ function AuthManager({ navigation }: Props): ReactElement {
 		} else if (page === 2) {
 			answers.address = answer;
 		} else if (page === 3) {
-			answers.keyword = answer;
+			let str = '';
+
+			if (key1 === true) str += `,아이스크림`;
+			if (key2 === true) str += ',과자';
+			if (key3 === true) str += ',음료수';
+			if (key4 === true) str += ',라면';
+			if (key5 === true) str += ',일회용품';
+
+			answers.keyword = str.split(',').slice(1);
 		}
 
 		setPage(page + 1);
 		setAnswer('');
 	};
 
-	const finish = () => {
-		setManager(true);
-		Alert.alert('완료', '매니저 인증이 완료되었습니다.', [{ text: '확인', onPress: () => navigation.navigate('QR') }]);
+	const finish = async () => {
+		const res = await fetch(`${url}/user/auth/store`, {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json',
+				Authorization: `Bearer ${jwt}`,
+			},
+			body: JSON.stringify({
+				userUuid: uuid,
+				storeLat: 37.556902,
+				storeLon: 127.079307,
+				storeName: answers.store,
+				address: answers.address,
+				keywords: answers.keyword,
+				storeUuid: answers.serial,
+			}),
+		});
+		console.log({
+			userUuid: uuid,
+			storeLat: 37.556902,
+			storeLon: 127.079307,
+			storeName: answers.store,
+			address: answers.address,
+			keywords: answers.keyword,
+			storeUuid: answers.serial,
+		});
+
+		// zaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaaaaaa
+
+		const data = await res.json();
+		console.log(data);
+
+		if (data.validation === true) {
+			Alert.alert('완료', '매니저 인증이 완료되었습니다.', [
+				{ text: '확인', onPress: () => navigation.navigate('QR') },
+			]);
+			setManager(true);
+		} else {
+			Alert.alert('실패', '매니저 인증이 실패하였습니다.', [
+				{ text: '확인', onPress: () => navigation.navigate('QR') },
+			]);
+		}
 	};
 
 	useEffect(() => {

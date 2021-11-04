@@ -1,94 +1,230 @@
 import React, { ReactElement, useContext, useState } from 'react';
-import { SafeAreaView, View, Text, StyleSheet, Button, TouchableOpacity } from 'react-native';
+import { SafeAreaView, View, Text, TouchableOpacity, ScrollView } from 'react-native';
 import { ParamListBase } from '@react-navigation/native';
-import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { createNativeStackNavigator, NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { Table, Row } from 'react-native-table-component';
 
-import GeoLocation from '../../../components/GeoLocation';
-import { UserContext } from '../Context';
+import Geolocation from '@react-native-community/geolocation';
+import { ServerContext, UserContext } from '../Context';
+import styles from '../../styles/Store';
 
 interface Props {
-	navigation: NativeStackNavigationProp<ParamListBase, 'STORE'>;
+	navigation: NativeStackNavigationProp<ParamListBase, '주변매장'>;
 }
 
-const styles = StyleSheet.create({
-	container: {
-		flex: 1,
-		justifyContent: 'center',
-		alignItems: 'center',
-		backgroundColor: '#ffffff',
-	},
-	top: {
-		position: 'absolute',
-		top: 0,
-		width: '100%',
-	},
-	top_l: {
-		margin: 50,
-		position: 'absolute',
-		left: 0,
-	},
-	top_r: {
-		margin: 30,
-		position: 'absolute',
-		right: 0,
-	},
-	box: {
-		backgroundColor: '#F2F2F2',
-		width: '100%',
-		position: 'absolute',
-		bottom: 0,
-		height: 530,
-	},
-	displacement: {
-		width: 90,
-		height: 90,
-		backgroundColor: '#DAEBF5',
-		borderRadius: 20,
-		justifyContent: 'center',
-		alignItems: 'center',
-	},
-	bold_blue: {
-		color: '#0076BA',
-		fontWeight: 'bold',
-		fontSize: 15,
-	},
-	bold_black: {
-		color: '#000000',
-		fontWeight: 'bold',
-		fontSize: 20,
-	},
-});
+interface navigatorProps {
+	route: {
+		key: string;
+		name: string;
+		params: {
+			storeName: string;
+		};
+		path: string;
+	};
+}
 
-function Store({ navigation }: Props): ReactElement {
-	const { name } = useContext(UserContext);
-	const [meter, setMeter] = useState('500 m');
-
-	const onPress = () => {
-		if (meter === '500 m') setMeter('1 km');
-		else if (meter === '1 km') setMeter('2 km');
-		else setMeter('500 m');
+function StoreInfo(storeName: navigatorProps): ReactElement {
+	// eslint-disable-next-line react/destructuring-assignment
+	const market = storeName.route.params.storeName;
+	const info = {
+		name: market,
+		keyword: ['과자', '음료수', '아이스크림'],
+		address: '서울특별시 광진구 군자로 98',
+		products: [
+			{
+				category: '아이스크림',
+				name: '탱크보이',
+				quantity: 5,
+				price: 1200,
+			},
+			{
+				category: '아이스크림',
+				name: '폴라포',
+				quantity: 12,
+				price: 1300,
+			},
+			{
+				category: '과자',
+				name: '새우깡',
+				quantity: 12,
+				price: 1500,
+			},
+		],
 	};
 
 	return (
 		<SafeAreaView style={styles.container}>
-			<View style={styles.top}>
-				<View style={styles.top_l}>
-					<Text style={styles.bold_black}>{name}님</Text>
-					<Text>근처 무인매장</Text>
+			<ScrollView style={styles.width100}>
+				<View style={styles.info}>
+					<Text style={styles.info_top}>{info.name}</Text>
+					<Text style={styles.info_mid}>{info.address}</Text>
+					<Text style={styles.info_bot}>
+						{info.keyword.map((key) => {
+							return `#${key}  `;
+						})}
+					</Text>
 				</View>
-				<View style={styles.top_r}>
-					<TouchableOpacity onPress={onPress} style={styles.displacement}>
-						<Text style={styles.bold_blue}>{meter}</Text>
-						<Text>이내</Text>
-					</TouchableOpacity>
+				<View style={styles.product}>
+					<Text style={styles.info_top}>매장 재고</Text>
+					<View style={styles.tbl}>
+						<Table borderStyle={{ borderWidth: 1, borderColor: '#D5D5D5' }}>
+							<Row
+								data={['대분류', '상품명', '가격', '재고']}
+								flexArr={[2, 5, 2, 1]}
+								style={styles.tbl_head}
+								textStyle={styles.tbl_head_text}
+							/>
+							{info.products.map((p) => {
+								return (
+									<Row
+										data={[p.category, p.name, p.price, p.quantity]}
+										flexArr={[2, 5, 2, 1]}
+										style={styles.tbl_row}
+										textStyle={styles.tbl_row_text}
+									/>
+								);
+							})}
+						</Table>
+					</View>
 				</View>
-			</View>
-			<View style={styles.box}>
-				<GeoLocation />
-				<Button title="Go to Store info" onPress={() => navigation.navigate('StoreInfo')} />
-			</View>
+			</ScrollView>
 		</SafeAreaView>
 	);
 }
 
-export default Store;
+const StoreStack = createNativeStackNavigator();
+function StoreStackScreen(): ReactElement {
+	const [store, setStore] = useState([
+		{
+			address: '-',
+			distance: 0,
+			managerName: null,
+			name: '-',
+			storeUuid: '-',
+		},
+	]);
+	const [meter, setMeter] = useState('조회');
+	const { jwt } = useContext(UserContext);
+	const { url } = useContext(ServerContext);
+
+	const location = () => {
+		Geolocation.getCurrentPosition(
+			async (position) => {
+				const lati = JSON.stringify(position.coords.latitude);
+				const longi = JSON.stringify(position.coords.longitude);
+
+				if (meter === '조회') {
+					setMeter('500 m');
+
+					const res = await fetch(
+						`${url}/stores/location?lat=${37.55085776427549}&lon=${127.07542715582301}&distance=${0.5}`,
+						{
+							method: 'GET',
+							headers: { Authorization: `Bearer ${jwt}` },
+						}
+					);
+
+					const data = await res.json();
+					setStore(data);
+				}
+				if (meter === '500 m') {
+					setMeter('1 km');
+
+					const res = await fetch(
+						`${url}/stores/location?lat=${37.55085776427549}&lon=${127.07542715582301}&distance=${1}`,
+						{
+							method: 'GET',
+							headers: { Authorization: `Bearer ${jwt}` },
+						}
+					);
+
+					const data = await res.json();
+					setStore(data);
+				} else if (meter === '1 km') {
+					setMeter('2 km');
+
+					const res = await fetch(
+						`${url}/stores/location?lat=${37.55085776427549}&lon=${127.07542715582301}&distance=${2}`,
+						{
+							method: 'GET',
+							headers: { Authorization: `Bearer ${jwt}` },
+						}
+					);
+
+					const data = await res.json();
+					setStore(data);
+				} else {
+					setMeter('500 m');
+
+					const res = await fetch(
+						`${url}/stores/location?lat=${37.55085776427549}&lon=${127.07542715582301}&distance=${0.5}`,
+						{
+							method: 'GET',
+							headers: { Authorization: `Bearer ${jwt}` },
+						}
+					);
+
+					const data = await res.json();
+					setStore(data);
+				}
+			},
+			(error) => {
+				console.log(error.code, error.message);
+			},
+			{ enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 }
+		);
+	};
+
+	function Store({ navigation }: Props): ReactElement {
+		const { name } = useContext(UserContext);
+
+		return (
+			<SafeAreaView style={styles.container}>
+				<View style={styles.top}>
+					<View style={styles.top_l}>
+						<Text style={styles.bold_black}>{name}님</Text>
+						<Text>근처 무인매장</Text>
+					</View>
+					<View style={styles.top_r}>
+						<TouchableOpacity onPress={location} style={styles.displacement}>
+							<Text style={styles.bold_blue}>{meter}</Text>
+							{meter !== '조회' ? <Text>이내</Text> : null}
+						</TouchableOpacity>
+					</View>
+				</View>
+				<ScrollView style={styles.box}>
+					{store.map((s) => {
+						return (
+							<View>
+								{s.storeUuid === '-' ? (
+									<Text style={styles.center}>{'사용자 위치 권한 승인 후\n매장 조회가 가능합니다.'}</Text>
+								) : (
+									<TouchableOpacity
+										key={s.storeUuid}
+										style={styles.btn}
+										onPress={() => navigation.navigate(s.name, { storeName: s.name })}
+									>
+										<Text style={styles.btn_top}>{s.name.split('_')[0]}</Text>
+										<Text style={styles.btn_bottom}>{s.address}</Text>
+										<Text style={styles.btn_right}>{`${Math.round(s.distance * 1000).toString()} m`}</Text>
+									</TouchableOpacity>
+								)}
+							</View>
+						);
+					})}
+				</ScrollView>
+			</SafeAreaView>
+		);
+	}
+
+	return (
+		<StoreStack.Navigator>
+			<StoreStack.Screen name="주변매장" component={Store} />
+			{store.map((s) => {
+				return <StoreStack.Screen name={s.name} component={StoreInfo} />;
+			})}
+		</StoreStack.Navigator>
+	);
+}
+
+export default StoreStackScreen;
