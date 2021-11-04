@@ -60,9 +60,9 @@ function TabScreen(): ReactElement {
 				})}
 			>
 				<Tab.Screen name="홈" component={HomeStackScreen} />
-				<Tab.Screen name="관리" component={ManageStackScreen} />
+				{/* <Tab.Screen name="관리" component={ManageStackScreen} /> */}
 				{name !== '-' ? <Tab.Screen name="매장" component={StoreStackScreen} /> : null}
-				{/* manager === true ? <Tab.Screen name="관리" component={ManageStackScreen} /> : null */}
+				{manager === true ? <Tab.Screen name="관리" component={ManageStackScreen} /> : null}
 				{/* <Tab.Screen name="Test" component={Test} /> */}
 			</Tab.Navigator>
 		</NavigationContainer>
