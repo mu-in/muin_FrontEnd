@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable camelcase */
 /* eslint-disable react/destructuring-assignment */
 import React, { ReactElement, useContext, useState } from 'react';
@@ -30,6 +31,7 @@ function StoreInfo(storeName: navigatorProps): ReactElement {
 	const { url } = useContext(ServerContext);
 	const { jwt } = useContext(UserContext);
 
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	const market = storeName.route.params.storeName;
 	const market_id = storeName.route.params.id;
 

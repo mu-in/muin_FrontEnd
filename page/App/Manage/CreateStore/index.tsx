@@ -102,8 +102,6 @@ function CreateStore({ navigation }: Props): ReactElement {
 			storeUuid: answers.serial,
 		});
 
-		// zaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaaaaaa
-
 		const data = await res.json();
 		console.log(data);
 
