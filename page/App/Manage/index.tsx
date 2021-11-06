@@ -1,4 +1,4 @@
-import React, { ReactElement, useState } from 'react';
+import React, { ReactElement, useContext, useState } from 'react';
 import {
 	SafeAreaView,
 	ScrollView,
@@ -23,6 +23,9 @@ import Icon from 'react-native-vector-icons/Ionicons';
 
 import styles from '../../styles/Manage';
 import modal from '../../styles/Modal';
+import { ServerContext, UserContext } from '../Context';
+
+import CreateStore from './CreateStore';
 
 interface Props {
 	navigation: NativeStackNavigationProp<ParamListBase, '관리매장'>;
@@ -40,11 +43,26 @@ interface Props4 {
 const ManageStack = createNativeStackNavigator();
 function ManageStackScreen(): ReactElement {
 	const now = new Date();
+	const { url } = useContext(ServerContext);
+	const { uuid, jwt } = useContext(UserContext);
+	const [storeList, setStore] = useState([{ id: 0, name: '-', address: '-' }]);
 
-	const storeList = [
-		{ name: '세종마트', address: '서울특별시 광진구 군자로 98' },
-		{ name: '세종대대마트', address: '서울특별시 광진구 군자로 98' },
-	];
+	const store = async () => {
+		const res = await fetch(`${url}/store/manager/${uuid}`, {
+			method: 'GET',
+			headers: {
+				Authorization: `Bearer ${jwt}`,
+			},
+		});
+
+		const data = await res.json();
+		console.log(data);
+		setStore(data);
+	};
+
+	if (storeList[0].name === '-') {
+		store();
+	}
 
 	function Home({ navigation }: Props2): ReactElement {
 		const storeName = navigation.getState().routes[1].name;
@@ -286,7 +304,7 @@ function ManageStackScreen(): ReactElement {
 											return item;
 										}}
 									/>
-									<Text>ㅎㅇㅎ??????????ㅇ</Text>
+									<Text>희희 아직안함</Text>
 								</View>
 							</View>
 						</BlurView>
@@ -392,23 +410,46 @@ function ManageStackScreen(): ReactElement {
 	}
 
 	function ManageList({ navigation }: Props): ReactElement {
+		const createStore = () => {
+			navigation.navigate('매장추가');
+		};
+
 		return (
 			<SafeAreaView style={styles.container}>
-				<ScrollView style={styles.box}>
-					{storeList.map((s) => {
-						return (
-							<TouchableOpacity style={styles.btn} onPress={() => navigation.navigate(s.name, { storeName: s.name })}>
-								<View>
-									<Text style={styles.btn_top}>{s.name}</Text>
-									<Text style={styles.btn_bottom}>{s.address}</Text>
-									<Text style={styles.btn_right}>
-										<Icon name="ios-arrow-forward" size={30} />
-									</Text>
-								</View>
-							</TouchableOpacity>
-						);
-					})}
-				</ScrollView>
+				<View style={styles.box}>
+					<ScrollView style={styles.scroll}>
+						{storeList.map((s) => {
+							return (
+								<TouchableOpacity style={styles.btn} onPress={() => navigation.navigate(s.name, { storeName: s.name })}>
+									<View>
+										<Text style={styles.btn_top}>{s.name}</Text>
+										<Text style={styles.btn_bottom}>{s.address}</Text>
+										<Text style={styles.btn_right}>
+											<Icon name="ios-arrow-forward" size={30} />
+										</Text>
+									</View>
+								</TouchableOpacity>
+							);
+						})}
+					</ScrollView>
+					<View style={styles.create}>
+						<TouchableOpacity
+							style={styles.refresh}
+							onPress={() => Alert.alert('재조회', `재조회 되었습니다.`, [{ text: '확인', onPress: () => store() }])}
+						>
+							<View>
+								<Text style={styles.refresh_text}>
+									<Icon name="refresh" size={30} />
+								</Text>
+							</View>
+						</TouchableOpacity>
+						<TouchableOpacity style={styles.create_btn} onPress={() => createStore()}>
+							<View>
+								<Text style={styles.create_center_s}>매장 추가</Text>
+							</View>
+						</TouchableOpacity>
+					</View>
+				</View>
 			</SafeAreaView>
 		);
 	}
@@ -416,6 +457,7 @@ function ManageStackScreen(): ReactElement {
 	return (
 		<ManageStack.Navigator>
 			<ManageStack.Screen name="관리매장" component={ManageList} />
+			<ManageStack.Screen name="매장추가" component={CreateStore} />
 			<ManageStack.Screen name="최근거래" component={Sales} />
 			<ManageStack.Screen name="재고관리" component={Stock} />
 			{storeList.map((s) => {
