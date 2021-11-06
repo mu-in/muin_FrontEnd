@@ -12,6 +12,12 @@ const styles = StyleSheet.create({
 		height: '100%',
 		position: 'absolute',
 	},
+	box_80: {
+		backgroundColor: '#F2F2F2',
+		width: '100%',
+		height: '80%',
+		position: 'absolute',
+	},
 	btn: {
 		borderRadius: 20,
 		backgroundColor: '#ffffff',
@@ -275,6 +281,11 @@ const styles = StyleSheet.create({
 		padding: 20,
 		width: '100%',
 	},
+	create: {
+		position: 'relative',
+		width: '90%',
+		height: 140,
+	},
 	create_btn: {
 		position: 'absolute',
 		width: '100%',
@@ -284,6 +295,21 @@ const styles = StyleSheet.create({
 		margin: 20,
 		marginBottom: 0,
 		height: 55,
+	},
+	scroll: {
+		position: 'relative',
+		height: 500,
+	},
+	refresh: {
+		position: 'absolute',
+		width: '100%',
+		textAlign: 'center',
+		bottom: 85,
+		paddingLeft: 30,
+	},
+	refresh_text: {
+		textAlign: 'center',
+		color: '#5E5E5E',
 	},
 });
 

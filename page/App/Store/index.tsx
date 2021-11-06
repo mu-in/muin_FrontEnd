@@ -1,3 +1,5 @@
+/* eslint-disable camelcase */
+/* eslint-disable react/destructuring-assignment */
 import React, { ReactElement, useContext, useState } from 'react';
 import { SafeAreaView, View, Text, TouchableOpacity, ScrollView } from 'react-native';
 import { ParamListBase } from '@react-navigation/native';
@@ -18,48 +20,53 @@ interface navigatorProps {
 		name: string;
 		params: {
 			storeName: string;
+			id: number;
 		};
 		path: string;
 	};
 }
 
 function StoreInfo(storeName: navigatorProps): ReactElement {
-	// eslint-disable-next-line react/destructuring-assignment
+	const { url } = useContext(ServerContext);
+	const { jwt } = useContext(UserContext);
+
 	const market = storeName.route.params.storeName;
-	const info = {
-		name: market,
-		keyword: ['과자', '음료수', '아이스크림'],
-		address: '서울특별시 광진구 군자로 98',
-		products: [
-			{
-				category: '아이스크림',
-				name: '탱크보이',
-				quantity: 5,
-				price: 1200,
+	const market_id = storeName.route.params.id;
+
+	const [name, setName] = useState('-');
+	const [keyword, setKey] = useState(['-']);
+	const [address, setAddress] = useState('-');
+	const [products, setProduct] = useState([{ category: '-', name: '-', quantity: 0, price: 0 }]);
+
+	const server = async () => {
+		console.log(`${url}/store/${market_id}`);
+		const res = await fetch(`${url}/store/${market_id}`, {
+			method: 'GET',
+			headers: {
+				Authorization: `Bearer ${jwt}`,
 			},
-			{
-				category: '아이스크림',
-				name: '폴라포',
-				quantity: 12,
-				price: 1300,
-			},
-			{
-				category: '과자',
-				name: '새우깡',
-				quantity: 12,
-				price: 1500,
-			},
-		],
+		});
+
+		const data = await res.json();
+		console.log(data);
+		setName(data.name);
+		setKey(data.keywords);
+		setAddress(data.address);
+		setProduct(data.stocks);
 	};
+
+	if (name === '-') {
+		server();
+	}
 
 	return (
 		<SafeAreaView style={styles.container}>
 			<ScrollView style={styles.width100}>
 				<View style={styles.info}>
-					<Text style={styles.info_top}>{info.name}</Text>
-					<Text style={styles.info_mid}>{info.address}</Text>
+					<Text style={styles.info_top}>{name}</Text>
+					<Text style={styles.info_mid}>{address}</Text>
 					<Text style={styles.info_bot}>
-						{info.keyword.map((key) => {
+						{keyword.map((key) => {
 							return `#${key}  `;
 						})}
 					</Text>
@@ -74,7 +81,7 @@ function StoreInfo(storeName: navigatorProps): ReactElement {
 								style={styles.tbl_head}
 								textStyle={styles.tbl_head_text}
 							/>
-							{info.products.map((p) => {
+							{products.map((p) => {
 								return (
 									<Row
 										data={[p.category, p.name, p.price, p.quantity]}
@@ -100,7 +107,7 @@ function StoreStackScreen(): ReactElement {
 			distance: 0,
 			managerName: null,
 			name: '-',
-			storeUuid: '-',
+			id: 0,
 		},
 	]);
 	const [meter, setMeter] = useState('조회');
@@ -196,13 +203,13 @@ function StoreStackScreen(): ReactElement {
 					{store.map((s) => {
 						return (
 							<View>
-								{s.storeUuid === '-' ? (
+								{s.id === 0 ? (
 									<Text style={styles.center}>{'사용자 위치 권한 승인 후\n매장 조회가 가능합니다.'}</Text>
 								) : (
 									<TouchableOpacity
-										key={s.storeUuid}
+										key={s.id}
 										style={styles.btn}
-										onPress={() => navigation.navigate(s.name, { storeName: s.name })}
+										onPress={() => navigation.navigate(s.name, { storeName: s.name, id: s.id })}
 									>
 										<Text style={styles.btn_top}>{s.name.split('_')[0]}</Text>
 										<Text style={styles.btn_bottom}>{s.address}</Text>

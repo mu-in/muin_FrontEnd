@@ -11,7 +11,6 @@ import AuthManager from './AuthManager';
 
 import Store from './Store';
 import Manage from './Manage';
-import Test from './Test';
 
 import { UserContextProvider, UserContext } from './Context';
 

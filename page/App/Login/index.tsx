@@ -14,7 +14,7 @@ interface Props {
 }
 
 function Login({ navigation }: Props): ReactElement {
-	const { setName, setEmail, setGoogle, setJwt, setUuid } = useContext(UserContext);
+	const { setName, setEmail, setGoogle, setJwt, setUuid, setManager } = useContext(UserContext);
 	const { url } = useContext(ServerContext);
 
 	const postServer = async ({ name, email, id }: { name: string | null; email: string; id: string | null }) => {
@@ -30,7 +30,9 @@ function Login({ navigation }: Props): ReactElement {
 
 		setUuid(data.uuid);
 		setJwt(data.jwt);
-
+		if (data.role === 'MANAGER') {
+			setManager(true);
+		}
 		navigation.navigate('QR');
 	};
 
