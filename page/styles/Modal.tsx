@@ -137,6 +137,16 @@ const modal = StyleSheet.create({
 		color: '#5E5E5E',
 		fontSize: 15,
 	},
+	selector: {
+		marginBottom: 30,
+		width: '100%',
+		justifyContent: 'center',
+		alignItems: 'center',
+	},
+	bottom: {
+		marginRight: 40,
+		marginTop: 100,
+	},
 });
 
 export default modal;

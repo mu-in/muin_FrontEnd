@@ -65,7 +65,7 @@ function StoreInfo(storeName: navigatorProps): ReactElement {
 		<SafeAreaView style={styles.container}>
 			<ScrollView style={styles.width100}>
 				<View style={styles.info}>
-					<Text style={styles.info_top}>{name}</Text>
+					<Text style={styles.info_top}>{name.split('_')[0]}</Text>
 					<Text style={styles.info_mid}>{address}</Text>
 					<Text style={styles.info_bot}>
 						{keyword.map((key) => {

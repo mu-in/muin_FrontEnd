@@ -57,7 +57,6 @@ function ManageStackScreen(): ReactElement {
 		});
 
 		const data = await res.json();
-		console.log(data);
 		setStore(data);
 	};
 
@@ -67,23 +66,38 @@ function ManageStackScreen(): ReactElement {
 
 	function Home({ navigation }: Props2): ReactElement {
 		const storeName = navigation.getState().routes[1].name;
-		const recentPayments = [
-			{ time: '21.10.30 21:40', price: '6,400' },
-			{ time: '21.10.30 21:07', price: '1,200' },
-			{ time: '21.10.30 20:40', price: '5,900' },
-			{ time: '21.10.30 18:42', price: '11,200' },
-			{ time: '21.10.30 16:20', price: '5,200' },
-		];
-		const statistics = [
-			{ month: 3, sales: 1645712 },
-			{ month: 4, sales: 2345412 },
-			{ month: 5, sales: 1756712 },
-			{ month: 6, sales: 1235712 },
-			{ month: 7, sales: 1834412 },
-			{ month: 8, sales: 2265712 },
-		];
+		const { id } = navigation.getState().routes[1].params;
 
-		const graphMonth = statistics.map((s) => `${s.month.toString()}월`);
+		const [recentPayments, setRecent] = useState([{ time: '-', price: '-' }]);
+		const [statistics, setStatis] = useState([{ month: 0, sales: 0 }]);
+		const [month, setMonth] = useState(0);
+		const [today, setToday] = useState(0);
+		const [soldOut, setSoldout] = useState(0);
+		const [shortage, setShortage] = useState(0);
+
+		const getHome = async () => {
+			const res = await fetch(`${url}/store/${id}/home`, {
+				// 홈 api 확인 id =1
+				method: 'GET',
+				headers: {
+					Authorization: `Bearer ${jwt}`,
+				},
+			});
+
+			const data = await res.json();
+			setRecent(data.sales.recentPayments);
+			setStatis(data.sales.statistics);
+			setMonth(data.sales.month);
+			setToday(data.sales.today);
+			setSoldout(data.sales.stockStatus.soldOut);
+			setShortage(data.sales.stockStatus.shortage);
+		};
+
+		if (recentPayments[0].time === '-') {
+			getHome();
+		}
+
+		const graphMonth = statistics.map((s) => `${s.month.toString().split('-')[1]}월`);
 		const graphSale = statistics.map((s) => s.sales / 10000);
 
 		const chartData = {
@@ -116,7 +130,7 @@ function ManageStackScreen(): ReactElement {
 		return (
 			<SafeAreaView style={styles.container}>
 				<ScrollView style={styles.box}>
-					<TouchableOpacity style={styles.sales} onPress={() => navigation.navigate('최근거래')}>
+					<TouchableOpacity style={styles.sales} onPress={() => navigation.navigate('최근거래', { id })}>
 						<Text style={styles.border_t}>최근 거래</Text>
 						<Text style={styles.border_tr}>
 							<Icon name="ios-arrow-forward" size={30} />
@@ -126,7 +140,7 @@ function ManageStackScreen(): ReactElement {
 								return (
 									<Row
 										data={[p.time, storeName, p.price, '카드 (승인)']}
-										flexArr={[2, 2, 1, 1.5]}
+										flexArr={[2, 1.5, 1, 1]}
 										style={styles.tbl_row}
 										textStyle={styles.tbl_text}
 									/>
@@ -137,11 +151,11 @@ function ManageStackScreen(): ReactElement {
 					<View style={styles.real}>
 						<View style={styles.real_l}>
 							<Text style={styles.border_t}>오늘 매출</Text>
-							<Text style={styles.real_pay}>{(123456).toLocaleString('ko-KR', { maximumFractionDigits: 4 })}</Text>
+							<Text style={styles.real_pay}>{today.toLocaleString('ko-KR', { maximumFractionDigits: 4 })}</Text>
 						</View>
 						<View style={styles.real_r}>
 							<Text style={styles.border_t}>{now.getMonth() + 1}월 매출</Text>
-							<Text style={styles.real_pay}>{(12345678).toLocaleString('ko-KR', { maximumFractionDigits: 4 })}</Text>
+							<Text style={styles.real_pay}>{month.toLocaleString('ko-KR', { maximumFractionDigits: 4 })}</Text>
 						</View>
 					</View>
 					<View style={styles.statics}>
@@ -155,7 +169,7 @@ function ManageStackScreen(): ReactElement {
 							/>
 						</View>
 					</View>
-					<TouchableOpacity style={styles.stock} onPress={() => navigation.navigate('재고관리')}>
+					<TouchableOpacity style={styles.stock} onPress={() => navigation.navigate('재고관리', { id })}>
 						<Text style={styles.border_t}>매장 재고</Text>
 						<Text style={styles.border_tr}>
 							<Icon name="ios-arrow-forward" size={30} />
@@ -164,13 +178,13 @@ function ManageStackScreen(): ReactElement {
 							<View style={styles.stock_l}>
 								<Text style={styles.tag_red}>품절</Text>
 								<Text style={styles.tag_text}>
-									<Text style={styles.red}>15 </Text> 상품
+									<Text style={styles.red}>{soldOut} </Text> 상품
 								</Text>
 							</View>
 							<View style={styles.stock_r}>
 								<Text style={styles.tag_yellow}>부족</Text>
 								<Text style={styles.tag_text}>
-									<Text style={styles.yellow}>15 </Text> 상품
+									<Text style={styles.yellow}>{shortage} </Text> 상품
 								</Text>
 							</View>
 						</View>
@@ -182,22 +196,37 @@ function ManageStackScreen(): ReactElement {
 
 	function Sales({ navigation }: Props3): ReactElement {
 		const storeName = navigation.getState().routes[1].name;
+		const { id } = navigation.getState().routes[1].params;
+
 		interface data {
 			item: { time: string; price: string };
 		}
-		const recentPayments = [
-			{ time: '21.10.30 21:40', price: '6,400' },
-			{ time: '21.10.30 21:07', price: '1,200' },
-			{ time: '21.10.30 20:40', price: '5,900' },
-			{ time: '21.10.30 18:42', price: '11,200' },
-			{ time: '21.10.30 16:20', price: '5,200' },
-		];
+		const [recentPayments, setRecent] = useState([{ time: '-', price: '-' }]);
+
+		const getSales = async () => {
+			const res = await fetch(`${url}/store/${id}/payments`, {
+				// 홈 api 확인 id =1
+				method: 'GET',
+				headers: {
+					Authorization: `Bearer ${jwt}`,
+				},
+			});
+
+			const da = await res.json();
+			console.log(da);
+			setRecent(da.payments);
+		};
+
+		if (recentPayments[0].time === '-') {
+			getSales();
+		}
+
 		const row = ({ item }: data) => {
 			return (
 				<Table style={styles.tbl_pay} borderStyle={{ borderWidth: 1, borderColor: '#ffffff' }}>
 					<Row
 						data={[item.time, storeName, item.price, '카드 (승인)']}
-						flexArr={[2, 2, 1, 1.5]}
+						flexArr={[2, 1.5, 1, 1]}
 						style={styles.tbl_row}
 						textStyle={styles.tbl_text}
 					/>
@@ -220,40 +249,120 @@ function ManageStackScreen(): ReactElement {
 	}
 
 	function Stock({ navigation }: Props4): ReactElement {
-		const storeName = navigation.getState().routes[1].name;
+		const { id } = navigation.getState().routes[1].params;
+
 		const [allStock, setAllStock] = useState(false);
 		const [createStock, setCreateStock] = useState(false);
 		const [manageStock, setManageStock] = useState(false);
 		const [category, setCategory] = useState('');
-		const [stock, setStock] = useState([{ name: '-', quantity: 0, price: 0 }]);
+		const [stock, setStock] = useState([{ id: 0, name: '-', quantity: 0, price: 0 }]);
 
-		const countries = ['Egypt', 'Canada', 'Australia', 'Ireland'];
+		const [select, setSel] = useState(['-']);
+		const [select2, setSel2] = useState(['-']);
+		const [product, setPro] = useState([[{ id: 0, name: '-', price: 0 }]]);
 
-		const products = [
-			{
-				category: '과자',
-				stock: [
-					{ name: '새우깡', quantity: 15, price: 1200 },
-					{ name: '빼빼로', quantity: 145, price: 1300 },
-				],
-			},
-			{
-				category: '아이스크림',
-				stock: [
-					{ name: '빠삐코', quantity: 315, price: 800 },
-					{ name: '탱크보이', quantity: 0, price: 800 },
-					{ name: '젤리뽀', quantity: 9, price: 900 },
-				],
-			},
-		];
+		const [index1, setIndex1] = useState(-1);
+		const [index2, setIndex2] = useState(-1);
+		const [num, setNum] = useState(0);
+
+		const getSelector = async () => {
+			const res = await fetch(`${url}/products`, {
+				method: 'GET',
+				headers: {
+					Authorization: `Bearer ${jwt}`,
+				},
+			});
+
+			const data = await res.json();
+			setSel(data.map((d: { category: string }) => d.category));
+			setPro(data.map((d: { products: string[] }) => d.products));
+		};
+
+		if (select[0] === '-') {
+			getSelector();
+		}
+
+		const [products, setProducts] = useState([
+			{ category: '-', stocks: [{ id: 0, name: '-', quantity: 0, price: 0 }] },
+		]);
+
+		const getProducts = async () => {
+			const res = await fetch(`${url}/store/${id}/stocks`, {
+				method: 'GET',
+				headers: {
+					Authorization: `Bearer ${jwt}`,
+				},
+			});
+
+			const data = await res.json();
+			setProducts(data.products);
+		};
+
+		if (product.length === 1) {
+			// eslint-disable-next-line array-callback-return
+			products.map((p) => {
+				if (p.category === '-') {
+					getProducts();
+				}
+			});
+		}
 
 		const onClick = (cate: string) => {
 			setManageStock(true);
 			setCategory(cate);
-			const st = products.find((x) => x.category === cate)?.stock;
+			const st = products.find((x) => x.category === cate)?.stocks;
 			if (st !== undefined) {
 				setStock(st);
 			}
+		};
+
+		const pushProducts = async () => {
+			const res = await fetch(`${url}/store/${id}/stock`, {
+				method: 'POST',
+				headers: {
+					Authorization: `Bearer ${jwt}`,
+					'Content-Type': 'application/json',
+				},
+				body: JSON.stringify({
+					productId: product[index1][index2].id,
+					quantity: num,
+				}),
+			});
+
+			const data = await res.json();
+			console.log(data);
+			getProducts();
+
+			setCreateStock(false);
+		};
+
+		const updateProduct = async ({ stockId, number }: { stockId: number; number: number }) => {
+			const res = await fetch(`${url}/store/${id}/stock/${stockId}`, {
+				method: 'POST',
+				headers: {
+					Authorization: `Bearer ${jwt}`,
+					'Content-Type': 'application/json',
+				},
+				body: JSON.stringify({
+					quantity: number,
+				}),
+			});
+			const data = await res.json();
+			console.log(data);
+			getProducts();
+		};
+
+		const deleteProduct = async ({ stockId, cate }: { stockId: number; cate: string }) => {
+			const res = await fetch(`${url}/store/${id}/stock/${stockId}`, {
+				method: 'DELETE',
+				headers: {
+					Authorization: `Bearer ${jwt}`,
+				},
+			});
+			const data = await res.json();
+			console.log(data);
+			getProducts();
+			Alert.alert('삭제 완료', `재고 삭제가 요청되었습니다.`, [{ text: 'OK', onPress: () => setManageStock(false) }]);
 		};
 
 		return (
@@ -293,19 +402,60 @@ function ManageStackScreen(): ReactElement {
 									<Text style={modal.closs_btn}>X</Text>
 								</TouchableOpacity>
 								<View style={modal.container}>
-									<SelectDropdown
-										data={countries}
-										onSelect={(selectedItem, index) => {
-											console.log(selectedItem, index);
-										}}
-										buttonTextAfterSelection={(selectedItem, index) => {
-											return selectedItem;
-										}}
-										rowTextForSelection={(item, index) => {
-											return item;
-										}}
-									/>
-									<Text>희희 아직안함</Text>
+									<View style={modal.selector}>
+										<SelectDropdown
+											data={select}
+											defaultButtonText="category"
+											onSelect={(selectedItem, index) => {
+												setSel2(product[index].map((p) => p.name));
+												setIndex1(index);
+											}}
+											buttonTextAfterSelection={(selectedItem) => {
+												return selectedItem;
+											}}
+											rowTextForSelection={(item) => {
+												return item;
+											}}
+										/>
+									</View>
+									<View style={modal.selector}>
+										<SelectDropdown
+											data={select2}
+											defaultButtonText="product"
+											onSelect={(selectedItem, index) => {
+												setIndex2(index);
+											}}
+											buttonTextAfterSelection={(selectedItem) => {
+												return selectedItem;
+											}}
+											rowTextForSelection={(item) => {
+												return item;
+											}}
+										/>
+									</View>
+									<View style={modal.selector}>
+										<InputSpinner
+											max={9999}
+											min={0}
+											step={1}
+											height={30}
+											fontSize={20}
+											width={150}
+											value={0}
+											color="#2196F3"
+											colorPress="#60D937"
+											onChange={(n) => {
+												setNum(n);
+											}}
+										/>
+									</View>
+									<View style={modal.bottom}>
+										<TouchableOpacity style={styles.create_btn} onPress={() => pushProducts()}>
+											<View>
+												<Text style={styles.create_center_s}>상품 추가</Text>
+											</View>
+										</TouchableOpacity>
+									</View>
 								</View>
 							</View>
 						</BlurView>
@@ -340,8 +490,8 @@ function ManageStackScreen(): ReactElement {
 													value={s.quantity}
 													color="#2196F3"
 													colorPress="#60D937"
-													onChange={(num) => {
-														console.log(num);
+													onChange={(n) => {
+														updateProduct({ stockId: s.id, number: n });
 													}}
 												/>
 												<Text style={modal.stock_price}>{s.price}</Text>
@@ -358,7 +508,7 @@ function ManageStackScreen(): ReactElement {
 																text: 'Cancel',
 																style: 'cancel',
 															},
-															{ text: 'OK', onPress: () => console.log('OK Pressed') },
+															{ text: 'OK', onPress: () => deleteProduct({ stockId: s.id, cate: category }) },
 														])
 													}
 												>
@@ -376,11 +526,14 @@ function ManageStackScreen(): ReactElement {
 				<View style={styles.box}>
 					<ScrollView>
 						{products.map((p) => {
+							if (p.category === '-') {
+								return <></>;
+							}
 							return (
 								<TouchableOpacity style={styles.btn} onPress={() => onClick(p.category)}>
 									<Text style={styles.tag_blue}>{p.category}</Text>
 									<Text style={styles.btn_right_bold}>
-										{p.stock.length} <Text style={styles.btn_right_text}> 상품</Text>
+										{p.stocks.length} <Text style={styles.btn_right_text}> 상품</Text>
 									</Text>
 								</TouchableOpacity>
 							);
@@ -421,7 +574,7 @@ function ManageStackScreen(): ReactElement {
 					<ScrollView style={styles.scroll}>
 						{storeList.map((s) => {
 							return (
-								<TouchableOpacity style={styles.btn} onPress={() => navigation.navigate(s.name, { storeName: s.name })}>
+								<TouchableOpacity style={styles.btn} onPress={() => navigation.navigate(s.name, { id: s.id })}>
 									<View>
 										<Text style={styles.btn_top}>{s.name}</Text>
 										<Text style={styles.btn_bottom}>{s.address}</Text>
