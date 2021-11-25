@@ -48,15 +48,17 @@ function Home({ navigation }: Props): ReactElement {
 	*/
 
 	const qrcode = async () => {
-		// const res = await fetch(`${url}/user/qrcode?seed=${Date.now()}:${uuid}`, {
-		//	method: 'GET',
-		//	headers: { Authorization: `Bearer ${jwt}` },
-		// });
+		/*
+		const res = await fetch(`${url}/user/qrcode?seed=${Date.now().toString()}:${uuid}`, {
+			method: 'GET',
+			headers: { Authorization: `Bearer ${jwt}` },
+		});
 
-		// const data = await res.json();
-		// console.log(data);
+		const data = await res.json();
+		console.log(data);
+		*/
 
-		setQR(`${Date.now}:${uuid}`);
+		setQR(`${Date.now().toString()}:${uuid}`);
 		setSec(30);
 	};
 

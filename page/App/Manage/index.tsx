@@ -85,15 +85,20 @@ function ManageStackScreen(): ReactElement {
 			});
 
 			const data = await res.json();
-			setRecent(data.sales.recentPayments);
-			setStatis(data.sales.statistics);
+			console.log(data);
+			if (data.sales.recentPayments.length !== 0) {
+				setRecent(data.sales.recentPayments);
+			}
+			if (data.sales.statistics.length !== 0) {
+				setStatis(data.sales.statistics);
+			}
 			setMonth(data.sales.month);
 			setToday(data.sales.today);
 			setSoldout(data.sales.stockStatus.soldOut);
 			setShortage(data.sales.stockStatus.shortage);
 		};
 
-		if (recentPayments[0].time === '-') {
+		if (recentPayments.length <= 1) {
 			getHome();
 		}
 
@@ -151,11 +156,11 @@ function ManageStackScreen(): ReactElement {
 					<View style={styles.real}>
 						<View style={styles.real_l}>
 							<Text style={styles.border_t}>오늘 매출</Text>
-							<Text style={styles.real_pay}>{today.toLocaleString('ko-KR', { maximumFractionDigits: 4 })}</Text>
+							<Text style={styles.real_pay}>{today}</Text>
 						</View>
 						<View style={styles.real_r}>
 							<Text style={styles.border_t}>{now.getMonth() + 1}월 매출</Text>
-							<Text style={styles.real_pay}>{month.toLocaleString('ko-KR', { maximumFractionDigits: 4 })}</Text>
+							<Text style={styles.real_pay}>{month}</Text>
 						</View>
 					</View>
 					<View style={styles.statics}>
@@ -214,7 +219,9 @@ function ManageStackScreen(): ReactElement {
 
 			const da = await res.json();
 			console.log(da);
-			setRecent(da.payments);
+			if (da.payments.length !== 0) {
+				setRecent(da.payments);
+			}
 		};
 
 		if (recentPayments[0].time === '-') {
@@ -329,6 +336,7 @@ function ManageStackScreen(): ReactElement {
 				}),
 			});
 
+			console.log(product[index1][index2].id);
 			const data = await res.json();
 			console.log(data);
 			getProducts();
