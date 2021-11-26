@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-empty-function */
 import React, { createContext, ReactElement, useState } from 'react';
+import { SERVER_URL } from './key';
 
 interface Props {
 	children: JSX.Element;
@@ -61,7 +62,7 @@ export const UserContextProvider = (props: Props): ReactElement => {
 };
 
 const serverDefaultValue = {
-	url: 'https://mu-in.herokuapp.com',
+	url: SERVER_URL,
 };
 
 export const ServerContext = createContext(serverDefaultValue);
